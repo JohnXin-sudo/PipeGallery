@@ -42,7 +42,7 @@ def actuator(actuatorName,action,regData, ip,all=False):
             "sensorid":191,
             "sensorlocalid":3,
             "deviceid":275
-        },
+        }
     }
     actuatorNames = ["黄灯","绿灯","红灯","水泵","风机","报警灯"]
     ##########################################################
@@ -100,4 +100,4 @@ if __name__ =="__main__":
     serverIP = "192.168.3.20"
     regData = userRegister(ip=serverIP)
 
-    actuator(actuatorName="红灯", action=0,regData=regData,ip=serverIP)
+    actuator(actuatorName="红灯", action=0,regData=regData,ip=serverIP,all=True)

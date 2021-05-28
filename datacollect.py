@@ -17,13 +17,11 @@ def dataWrite(data,file):
     df.to_csv(file,header=0,index=0)
 
 
-def dataCollect(regData, ip,tableNum=10,all=False):
+def dataCollect(regData, ip,tableNum=10):
     """
     ip:主机ip String
-    actuator: 执行机构名称：黄灯，绿灯，红灯，水泵，风机，报警灯
-    action：执行动作 1启动，0关闭
+    tableNum:每次存储查询数据个行数
     regData: 系统注册全局表头
-    all: 为True时全部执行器顺序执行Action，此时actuatorName无效
     """
     sensors = {
         "可燃气体":{
@@ -72,7 +70,7 @@ def dataCollect(regData, ip,tableNum=10,all=False):
 
             sensorid = sensors[sensor]["sensorid"]
 
-            # # 传感器数据获取
+            # 传感器数据获取
             url = "http://{}:7002/deviceCommand/queryDeviceSensor/{}".format(ip, sensorid)
 
             data = {"sign":regData["sign"], "sessionId":regData["sessionId"]}
