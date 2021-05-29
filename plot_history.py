@@ -61,38 +61,39 @@ for i in range(5000):
     plt.clf()  # 清除之前画的图
 
     ax1 = plt.subplot(221)
-    plt.plot(index,ph4,'bo--',label="甲烷")
+    plt.plot(index,ph4,'bo--',label="甲烷") #o
     # ax1.set_xlabel("甲烷",fontsize=16)
     ax1.legend()
     plt.grid()
     plt.xticks(rotation=25)
-    plt.ylim (-10, 60) 
+    plt.ylim (-5, 60) 
 
     ax2 = plt.subplot(222)
-    plt.plot(index,temperture,'rd--',label="温度")
+    plt.plot(index,temperture,'rd--',label="温度") #d
     # ax2.set_xlabel("温度",fontsize=16)
     ax2.legend()
     plt.grid()
     plt.xticks(rotation=25)
 
     ax3 = plt.subplot(223)
-    plt.plot(index,humility,"yd--",label="湿度")
+    plt.plot(index,humility,"yd--",label="湿度") #d
     # ax3.set_xlabel("湿度",fontsize=16)
     ax3.legend()
     plt.grid()
     plt.xticks(rotation=25)
-
+    
     ax4 = plt.subplot(224)
-    plt.plot(index,o2,"go--",label="氧气")
+    plt.plot(index,o2,"go--",label="氧气") #o
     # ax4.set_xlabel("氧气",fontsize=16)
     ax4.legend()
     plt.grid()  # 坐标网格
     plt.xticks(rotation=25)
+    plt.ylim (20.5, 21.5) 
     
     plt.suptitle('地下综合管廊智慧管控平台',fontsize=24,color='b')
     
 
-    # plt.ioff()  # 关闭画图窗口
+    plt.ioff()  # 关闭画图窗口
     plt.pause (0.01)  # 这个为停顿0.01s，能得到产生实时的效
 
 
@@ -102,7 +103,7 @@ for i in range(5000):
     #         break
     #     else:
     #         time.sleep(0.5) # 暂停一段时间，不然画的太快会卡住显示不出来
-    time.sleep(1)
+    # time.sleep(0.1)
             
 
     

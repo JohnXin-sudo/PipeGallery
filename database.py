@@ -50,8 +50,8 @@ class OperationMysql():
         keys = ', '.join(data.keys())
         values = ', '.join(['%s'] * len(data))
         sql = 'INSERT INTO {table}({keys}) VALUES ({values})'.format(table=table, keys=keys, values=values)
-        # print(sql)
-        
+         # print(sql)
+       
         try:
             self.cur.execute(sql, tuple(data.values()))    
             # print('Successful')
@@ -132,7 +132,7 @@ class OperationMysql():
             sql = "select ph4,temperature,humidity,o2,time FROM {table} WHERE id={id}".format(table=table,id=id+i)
 
             result = np.array(self.search_one(sql))
-            print(result)
+            # print(result)
             window.append(result[0:5])
             time.append(result[-1])
         

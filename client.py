@@ -55,12 +55,16 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             if actuator(actuatorName="水泵", action=0,regData=self.regData,ip=self.serverIP):
                 self.shuibengFlag = 0
                 print("报警灯已关闭")                
-                self.shuibeng.setStyleSheet("background-color: gray");             
+                self.shuibeng.setStyleSheet("background-color: gray")      
+            else:
+                print("系统未响应")
         else:                    
             if actuator(actuatorName="水泵", action=1,regData=self.regData,ip=self.serverIP):
                 self.shuibengFlag = 1
                 print("报警灯已打开")                
-                self.shuibeng.setStyleSheet("background-color: green");
+                self.shuibeng.setStyleSheet("background-color: green")
+            else:
+                print("系统未响应")                
 
     def baojingButtonClicked(self):
         if self.baojingFlag:
@@ -68,12 +72,16 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             if actuator(actuatorName="报警灯", action=0,regData=self.regData,ip=self.serverIP):
                 self.baojingFlag = 0
                 print("报警灯已关闭")                
-                self.baojing.setStyleSheet("background-color: gray");             
+                self.baojing.setStyleSheet("background-color: gray")
+            else:
+                print("系统未响应")                            
         else:                    
             if actuator(actuatorName="报警灯", action=1,regData=self.regData,ip=self.serverIP):
                 self.baojingFlag = 1
                 print("报警灯已打开")                
-                self.baojing.setStyleSheet("background-color: green");
+                self.baojing.setStyleSheet("background-color: green")
+            else:
+                print("系统未响应")                
 
     def fengjiButtonClicked(self):
         if self.fengjiFlag:
@@ -81,12 +89,16 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             if actuator(actuatorName="风机", action=0,regData=self.regData,ip=self.serverIP):
                 self.fengjiFlag = 0
                 print("风机已关闭")                
-                self.fengji.setStyleSheet("background-color: gray");             
+                self.fengji.setStyleSheet("background-color: gray")
+            else:
+                print("系统未响应")                             
         else:                    
             if actuator(actuatorName="风机", action=1,regData=self.regData,ip=self.serverIP):
                 self.fengjiFlag = 1
                 print("风机已打开")                
-                self.fengji.setStyleSheet("background-color: green");
+                self.fengji.setStyleSheet("background-color: green")
+            else:
+                print("系统未响应")                
     
     def yellowButtonClicked(self):
         if self.yellowFlag:
@@ -107,12 +119,16 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             if actuator(actuatorName="红灯", action=0,regData=self.regData,ip=self.serverIP):
                 self.redFlag = 0
                 print("红灯已关闭")
-                self.redButton.setStyleSheet("background-color: gray");             
+                self.redButton.setStyleSheet("background-color: gray") 
+            else:
+                print("系统未响应")                           
         else:                    
             if actuator(actuatorName="红灯", action=1,regData=self.regData,ip=self.serverIP):
                 self.redFlag = 1
                 print("红灯已打开")                
-                self.redButton.setStyleSheet("background-color: red");
+                self.redButton.setStyleSheet("background-color: red")
+            else:
+                print("系统未响应")                
 
     def greenButtonClicked(self):
         if self.greenFlag:
@@ -120,12 +136,16 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             if actuator(actuatorName="绿灯", action=0,regData=self.regData,ip=self.serverIP):
                 self.greenFlag = 0
                 print("绿灯已关闭")
-                self.greenButton.setStyleSheet("background-color: gray");             
+                self.greenButton.setStyleSheet("background-color: gray")
+            else:
+                print("系统未响应")                             
         else:                    
             if actuator(actuatorName="绿灯", action=1,regData=self.regData,ip=self.serverIP):
                 self.greenFlag = 1
                 print("绿灯已打开")
-                self.greenButton.setStyleSheet("background-color: green");
+                self.greenButton.setStyleSheet("background-color: green")
+            else:
+                print("系统未响应")                
 
 
 
@@ -133,13 +153,14 @@ if __name__ == "__main__":
     #固定的，PyQt5程序都需要QApplication对象。sys.argv是命令行参数列表，确保程序可以双击运行
     app = QApplication(sys.argv)
     #初始化
-    myWin = MyMainForm()
+    serverIP = "192.168.3.20"
+    myWin = MyMainForm(ip=serverIP)
     #将窗口控件显示在屏幕上
     myWin.show()
     #程序运行，sys.exit方法确保程序完整退出。
     sys.exit(app.exec_())
 
-    serverIP = "192.168.3.20"
+
     
 
     
