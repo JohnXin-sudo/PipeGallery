@@ -82,20 +82,23 @@ class OperationMysql():
 
     def dataWindow(self, table,window_size=50):
 
+
         """
         返回数据库中最新window_size个数据，
         可以根据返回的currentId来判断数据库数据是否发生更新
         """
 
         self.lastId = self.last_record(table,"id")
-        currentId = self.lastId - 50 + 1
+        currentId = self.lastId - window_size + 1
         window = []
+        time = []
         for i in range(0,window_size):
          
-            sql = "select ph4,temperature,humidity,o2 FROM {table} WHERE id={id}".format(table=table,id=currentId+i)
+            sql = "select ph4,temperature,humidity,o2,time FROM {table} WHERE id={id}".format(table=table,id=currentId+i)
 
-            result = self.search_one(sql)
-            window.append(result)
+            result = np.array(self.search_one(sql))
+            window.append(result[0:5])
+            time.append(result[-1])
         
         # 获取最新50条记录
         # sql = "SELECT * FROM {table} LIMIT {id},{window_size}".format(table=table,id=lastId,window_size=window_size)
@@ -104,10 +107,48 @@ class OperationMysql():
         # result = np.array(self.search_all(sql))
         # print(result.shape)
         window = np.array(window)
+        time = np.array(time)
         # print(window)
-        print("当前数据库id位置：",currentId)
-        print("最新数据库id位置", self.lastId)
-        return self.lastId, window
+        # print("当前数据库id位置：",currentId)
+        # print("最新数据库id位置", self.lastId)
+        return self.lastId, window,time
+
+
+        
+    def getData(self, table,id,window_size=50):
+
+        """
+        返回数据库中最新window_size个数据，
+        可以根据返回的currentId来判断数据库数据是否发生更新
+        """
+
+        # self.lastId = self.last_record(table,"id")
+        # currentId = self.lastId - window_size + 1
+        window = []
+        time = []
+
+        for i in range(0,window_size):
+         
+            sql = "select ph4,temperature,humidity,o2,time FROM {table} WHERE id={id}".format(table=table,id=id+i)
+
+            result = np.array(self.search_one(sql))
+            print(result)
+            window.append(result[0:5])
+            time.append(result[-1])
+        
+        # 获取最新50条记录
+        # sql = "SELECT * FROM {table} LIMIT {id},{window_size}".format(table=table,id=lastId,window_size=window_size)
+        # # sql = "SELECT * FROM {table} WHERE id = {lastid}".format(table=table)
+        # sql = "SELECT * FROM {table} ORDER BY {id} DESC LIMIT {window_size};".format(table=table,id="id",window_size=window_size)
+        # result = np.array(self.search_all(sql))
+        # print(result.shape)
+        window = np.array(window)
+        time = np.array(time)
+        # print(window)
+        # print("当前数据库id位置：",currentId)
+        # print("最新数据库id位置", self.lastId)
+        return id, window,time
+
 
     # 查询一条数据
     def search_one(self, sql):

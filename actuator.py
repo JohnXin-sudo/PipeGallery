@@ -86,7 +86,10 @@ def actuator(actuatorName,action,regData, ip,all=False):
                     
         serverReturnData = rq.post(url,data=data)
         sensorData = json.loads(serverReturnData.content.decode("UTF-8"))
-        
+        if sensorData['msg']=='请求成功':
+            return 1
+        else:
+            return 0
         
         
         print(sensorData)
