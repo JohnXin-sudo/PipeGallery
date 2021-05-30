@@ -62,11 +62,14 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.shuibeng.setStyleSheet("background-color: gray")
 
         self.startrealtimeplot.clicked.connect(self.startRealTimePlot)
-        self.yellowButton_3.clicked.connect(self.stopRealTimePlot)
-        self.yellowButton_5.clicked.connect(self.startHistoryPlot)
-        self.yellowButton_6.clicked.connect(self.stopHistoryPlot)
+        self.stoprealtimeplot.clicked.connect(self.stopRealTimePlot)
+        self.starthistoryplot.clicked.connect(self.startHistoryPlot)
+        self.stophistoryplot.clicked.connect(self.stopHistoryPlot)
+        self.startpredict.clicked.connect(self.startpredictPlot)
+        self.stoppredict.clicked.connect(self.stoppredictPlot)
 
         self.historycommitbutton.clicked.connect(self.historyCommit)
+        self.speedCommitbutton.clicked.connect(self.speedCommit)
 
         # 1. 用户注册
         self.serverIP = "192.168.3.20"
@@ -90,6 +93,26 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         print("显示历史数据")
         self.plotCurve.plot(window_size=int(num))
         pass
+
+
+    def speedCommit(self):
+        num = self.speedinput.text()
+        if not num.isdigit():
+            print("输入整形")
+            return
+        print(num)
+
+        print("显示数据速度改变")
+        self.plotCurve.changeSpeed(speed=int(num))
+
+
+    def startpredictPlot(self):
+        print("显示预测数据")
+        self.plotCurve.plotPredicated()
+
+    def stoppredictPlot(self):
+        self.plotCurve.stopPlotPredicated()
+        print("停止预测数据")
 
     def startRealTimePlot(self):
         print("显示实时数据")
@@ -219,6 +242,7 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             print("Error: unable to start thread")
 
     def greenButtonClicked(self):
+        self.plotCurve.plotPredicated()
         try:
             t = threading.Thread(target=self.threadsFunction, args=("水泵",))
             t.start()

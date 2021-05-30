@@ -122,8 +122,6 @@ class OperationMysql():
         可以根据返回的currentId来判断数据库数据是否发生更新
         """
 
-        # self.lastId = self.last_record(table,"id")
-        # currentId = self.lastId - window_size + 1
         window = []
         time = []
 

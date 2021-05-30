@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1529</width>
+    <width>1524</width>
     <height>985</height>
    </rect>
   </property>
@@ -178,13 +178,13 @@
      <string>输入查看的历史数据数量</string>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>1270</x>
-      <y>450</y>
+      <y>550</y>
       <width>241</width>
-      <height>252</height>
+      <height>367</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
@@ -202,7 +202,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="yellowButton_3">
+      <widget class="QPushButton" name="stoprealtimeplot">
        <property name="font">
         <font>
          <family>AcadEref</family>
@@ -215,7 +215,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="yellowButton_5">
+      <widget class="QPushButton" name="starthistoryplot">
        <property name="font">
         <font>
          <family>AcadEref</family>
@@ -228,7 +228,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="yellowButton_6">
+      <widget class="QPushButton" name="stophistoryplot">
        <property name="font">
         <font>
          <family>AcadEref</family>
@@ -240,13 +240,39 @@
        </property>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="startpredict">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>实施预测</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stoppredict">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>关闭实时预测</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>1270</x>
-      <y>240</y>
+      <y>340</y>
       <width>241</width>
       <height>201</height>
      </rect>
@@ -332,13 +358,67 @@
      </item>
     </layout>
    </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>1270</x>
+      <y>230</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>输入历史数据数据回放速度</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="speedCommitbutton">
+    <property name="geometry">
+     <rect>
+      <x>1420</x>
+      <y>270</y>
+      <width>93</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>提交</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="speedinput">
+    <property name="geometry">
+     <rect>
+      <x>1270</x>
+      <y>270</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1529</width>
+     <width>1524</width>
      <height>26</height>
     </rect>
    </property>
