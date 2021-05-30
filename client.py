@@ -68,8 +68,10 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.startpredict.clicked.connect(self.startpredictPlot)
         self.stoppredict.clicked.connect(self.stoppredictPlot)
 
+
         self.historycommitbutton.clicked.connect(self.historyCommit)
         self.speedCommitbutton.clicked.connect(self.speedCommit)
+        self.idcommitbutton.clicked.connect(self.idCommit)
 
         # 1. 用户注册
         self.serverIP = "192.168.3.20"
@@ -89,21 +91,35 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             print("输入整形")
             return
         print(num)
+
         self.plotCurve.stopPlot()
-        print("显示历史数据")
-        self.plotCurve.plot(window_size=int(num))
+        print("显示数据数量改变")
+        self.plotCurve.changePredN(N=int(num))
+        # self.plotCurve.plot(window_size=int(num))
         pass
 
 
     def speedCommit(self):
         num = self.speedinput.text()
+        try :
+            num=float(num)
+        except Exception:
+            print("输入数字")            
+            return
+        print(num)
+        print("显示数据速度改变")
+        self.plotCurve.changeSpeed(speed=num)
+
+    def idCommit(self):        
+        num = self.idinput.text()
         if not num.isdigit():
             print("输入整形")
             return
         print(num)
 
-        print("显示数据速度改变")
-        self.plotCurve.changeSpeed(speed=int(num))
+        print("显示数据位置改变")
+        self.plotCurve.changeId(id=int(num))        
+
 
 
     def startpredictPlot(self):
