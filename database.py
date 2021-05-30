@@ -115,7 +115,7 @@ class OperationMysql():
 
 
         
-    def getData(self, table,id,window_size=50):
+    def getData(self,id,window_size=50 ,table="sensor_data_formated"):
 
         """
         返回数据库中最新window_size个数据，

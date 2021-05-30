@@ -1,167 +1,247 @@
 
-#导入程序运行必须模块
+# 导入程序运行必须模块
 import sys
-#PyQt5中使用的基本控件都在PyQt5.QtWidgets模块中
+# PyQt5中使用的基本控件都在PyQt5.QtWidgets模块中
 from PyQt5.QtWidgets import QApplication, QMainWindow
-#导入designer工具生成的login模块
-from client.mainWindow  import Ui_MainWindow
-from register import userRegister
+from PyQt5 import QtCore, QtGui
+# 导入designer工具生成的login模块
+# from client.mainWindow  import Ui_MainWindow
 
+from client.main_1 import Ui_MainWindow  # 测试
+
+
+from register import userRegister
+import threading
 
 from actuator import actuator
+from database import OperationMysql
+
 
 class MyMainForm(QMainWindow, Ui_MainWindow):
-    def __init__(self, parent=None,ip="192.168.3.20"):
+    def __init__(self, parent=None, ip="192.168.3.20"):
         super(MyMainForm, self).__init__(parent)
         self.setupUi(self)
-        # #添加登录按钮信号和槽。注意display函数不加小括号()
-        # self.login_Button.clicked.connect(self.display)
-        # #添加退出按钮信号和槽。调用close函数
-        # self.cancel_Button.clicked.connect(self.close)
-        
-        self.serverIP=ip
+
+        # self.setWindowOpacity(1)
+        # 设置 无边框
+        # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
+        self.setStyleSheet(
+            "#MainWindow{border-image:url(./image/backgroundark.png);}")
+        # self.setWindowIcon(QtGui.QIcon("./images/icon.png"))
+        self.setWindowTitle("综合管廊客户端")
+
+        self.serverIP = ip
         self.regData = userRegister(ip=self.serverIP)
 
         # 黄灯 button
         self.yellowButton.clicked.connect(self.yellowButtonClicked)
         self.yellowFlag = 0
-        self.yellowButton.setStyleSheet("background-color: gray");
+        self.yellowButton.setStyleSheet("background-color: gray")
 
         # 红灯 button
         self.redButton.clicked.connect(self.redButtonClicked)
         self.redFlag = 0
-        self.redButton.setStyleSheet("background-color: gray");
+        self.redButton.setStyleSheet("background-color: gray")
 
         # 绿灯button
         self.greenButton.clicked.connect(self.greenButtonClicked)
         self.greenFlag = 0
-        self.greenButton.setStyleSheet("background-color: gray");
+        self.greenButton.setStyleSheet("background-color: gray")
 
         # 风机button
         self.fengji.clicked.connect(self.fengjiButtonClicked)
         self.fengjiFlag = 0
-        self.fengji.setStyleSheet("background-color: gray");
+        self.fengji.setStyleSheet("background-color: gray")
         # 报警灯button
         self.baojing.clicked.connect(self.baojingButtonClicked)
         self.baojingFlag = 0
-        self.baojing.setStyleSheet("background-color: gray");
-        # # 水泵button
+        self.baojing.setStyleSheet("background-color: gray")
+        # # # 水泵button
         self.shuibeng.clicked.connect(self.shuibengButtonClicked)
         self.shuibengFlag = 0
-        self.shuibeng.setStyleSheet("background-color: gray");
+        self.shuibeng.setStyleSheet("background-color: gray")
 
-    def shuibengButtonClicked(self):
-        if self.shuibengFlag:            
-            if actuator(actuatorName="水泵", action=0,regData=self.regData,ip=self.serverIP):
+        self.startrealtimeplot.clicked.connect(self.startRealTimePlot)
+        self.yellowButton_3.clicked.connect(self.stopRealTimePlot)
+        self.yellowButton_5.clicked.connect(self.startHistoryPlot)
+        self.yellowButton_6.clicked.connect(self.stopHistoryPlot)
+
+        self.historycommitbutton.clicked.connect(self.historyCommit)
+
+        # 1. 用户注册
+        self.serverIP = "192.168.3.20"
+        self.regData = userRegister(ip=serverIP)
+        # 数据库信息
+        user = "root"
+        password = "123456"
+        database = "pipegallery"
+        table = "sensor_data_formated"
+
+        self.op_mysql = OperationMysql(
+            user=user, password=password, database=database)
+
+    def historyCommit(self):
+        num = self.historyinput.text()
+        if not num.isdigit():
+            print("输入整形")
+            return
+        print(num)
+        self.plotCurve.stopPlot()
+        print("显示历史数据")
+        self.plotCurve.plot(window_size=int(num))
+        pass
+
+    def startRealTimePlot(self):
+        print("显示实时数据")
+        self.plotCurve.plotRealTime(self.op_mysql)
+
+    def stopRealTimePlot(self):
+        self.plotCurve.stopPlotRealTime()
+        print("停止实时数据")
+
+    def startHistoryPlot(self):
+        print("显示历史数据")
+        self.plotCurve.plot(window_size=1000)
+
+    def stopHistoryPlot(self):
+        self.plotCurve.stopPlot()
+        print("停止历史数据")
+
+    def nameFlag(self, nameCN, action=-1):
+        if nameCN == "水泵":
+            if action == 1:
+                self.shuibengFlag = 1
+                self.shuibeng.setStyleSheet("background-color: green")
+            elif action == 0:
                 self.shuibengFlag = 0
-                print("报警灯已关闭")                
-                self.shuibeng.setStyleSheet("background-color: gray")      
+                self.shuibeng.setStyleSheet("background-color: gray")
+            return self.shuibengFlag
+        elif nameCN == "风机":
+            if action == 1:
+                self.fengjiFlag = 1
+                self.fengji.setStyleSheet("background-color: green")
+            elif action == 0:
+                self.fengjiFlag = 0
+                self.fengji.setStyleSheet("background-color: gray")
+            return self.fengjiFlag
+        elif nameCN == "报警灯":
+            if action == 1:
+                self.baojingFlag = 1
+                self.baojing.setStyleSheet("background-color: green")
+            elif action == 0:
+                self.baojingFlag = 0
+                self.baojing.setStyleSheet("background-color: gray")
+            return self.baojingFlag
+        elif nameCN == "红灯":
+            if action == 1:
+                self.redFlag = 1
+                self.redButton.setStyleSheet("background-color: green")
+            elif action == 0:
+                self.redFlag = 0
+                self.redButton.setStyleSheet("background-color: gray")
+            return self.redFlag
+        elif nameCN == "黄灯":
+            if action == 1:
+                self.yellowFlag = 1
+                self.yellowButton.setStyleSheet("background-color: green")
+            elif action == 0:
+                self.yellowFlag = 0
+                self.yellowButton.setStyleSheet("background-color: gray")
+            return self.yellowFlag
+        elif nameCN == "绿灯":
+            if action == 1:
+                self.greenFlag = 1
+                self.greenButton.setStyleSheet("background-color: green")
+            elif action == 0:
+                self.greenFlag = 0
+                self.greenButton.setStyleSheet("background-color: gray")
+            return self.greenFlag
+
+    def threadsFunction(self, nameCN):
+        print(threading.current_thread().name)
+        flag = self.nameFlag(nameCN)
+        if flag:
+            if actuator(actuatorName=nameCN, action=0, regData=self.regData, ip=self.serverIP):
+                self.nameFlag(nameCN, action=0)
+                print("{0}已关闭".format(nameCN))
+
             else:
                 print("系统未响应")
-        else:                    
-            if actuator(actuatorName="水泵", action=1,regData=self.regData,ip=self.serverIP):
-                self.shuibengFlag = 1
-                print("报警灯已打开")                
-                self.shuibeng.setStyleSheet("background-color: green")
+        else:
+            if actuator(actuatorName=nameCN, action=1, regData=self.regData, ip=self.serverIP):
+                self.nameFlag(nameCN, action=1)
+                # self.shuibengFlag = 1
+                print("{0}已开启".format(nameCN))
             else:
-                print("系统未响应")                
+                print("系统未响应")
+
+    def shuibengButtonClicked(self):
+        try:
+            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t.start()
+            # t.join() # 主进程卡在这等线程执行完毕
+        except:
+            print("Error: unable to start thread")
 
     def baojingButtonClicked(self):
-        if self.baojingFlag:
-            
-            if actuator(actuatorName="报警灯", action=0,regData=self.regData,ip=self.serverIP):
-                self.baojingFlag = 0
-                print("报警灯已关闭")                
-                self.baojing.setStyleSheet("background-color: gray")
-            else:
-                print("系统未响应")                            
-        else:                    
-            if actuator(actuatorName="报警灯", action=1,regData=self.regData,ip=self.serverIP):
-                self.baojingFlag = 1
-                print("报警灯已打开")                
-                self.baojing.setStyleSheet("background-color: green")
-            else:
-                print("系统未响应")                
+
+        try:
+            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t.start()
+            # t.join() # 主进程卡在这等线程执行完毕
+        except:
+            print("Error: unable to start thread")
 
     def fengjiButtonClicked(self):
-        if self.fengjiFlag:
-            
-            if actuator(actuatorName="风机", action=0,regData=self.regData,ip=self.serverIP):
-                self.fengjiFlag = 0
-                print("风机已关闭")                
-                self.fengji.setStyleSheet("background-color: gray")
-            else:
-                print("系统未响应")                             
-        else:                    
-            if actuator(actuatorName="风机", action=1,regData=self.regData,ip=self.serverIP):
-                self.fengjiFlag = 1
-                print("风机已打开")                
-                self.fengji.setStyleSheet("background-color: green")
-            else:
-                print("系统未响应")                
-    
+        try:
+            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t.start()
+            # t.join() # 主进程卡在这等线程执行完毕
+        except:
+            print("Error: unable to start thread")
+
     def yellowButtonClicked(self):
-        if self.yellowFlag:
-            
-            if actuator(actuatorName="黄灯", action=0,regData=self.regData,ip=self.serverIP):
-                self.yellowFlag = 0
-                print("黄灯已关闭")                
-                self.yellowButton.setStyleSheet("background-color: gray");             
-        else:                    
-            if actuator(actuatorName="黄灯", action=1,regData=self.regData,ip=self.serverIP):
-                self.yellowFlag = 1
-                print("黄灯已打开")                
-                self.yellowButton.setStyleSheet("background-color: yellow");
+
+        try:
+            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t.start()
+            # t.join() # 主进程卡在这等线程执行完毕
+        except:
+            print("Error: unable to start thread")
 
     def redButtonClicked(self):
-        if self.redFlag:
-            
-            if actuator(actuatorName="红灯", action=0,regData=self.regData,ip=self.serverIP):
-                self.redFlag = 0
-                print("红灯已关闭")
-                self.redButton.setStyleSheet("background-color: gray") 
-            else:
-                print("系统未响应")                           
-        else:                    
-            if actuator(actuatorName="红灯", action=1,regData=self.regData,ip=self.serverIP):
-                self.redFlag = 1
-                print("红灯已打开")                
-                self.redButton.setStyleSheet("background-color: red")
-            else:
-                print("系统未响应")                
+
+        try:
+            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t.start()
+            # t.join() # 主进程卡在这等线程执行完毕
+        except:
+            print("Error: unable to start thread")
 
     def greenButtonClicked(self):
-        if self.greenFlag:
-            
-            if actuator(actuatorName="绿灯", action=0,regData=self.regData,ip=self.serverIP):
-                self.greenFlag = 0
-                print("绿灯已关闭")
-                self.greenButton.setStyleSheet("background-color: gray")
-            else:
-                print("系统未响应")                             
-        else:                    
-            if actuator(actuatorName="绿灯", action=1,regData=self.regData,ip=self.serverIP):
-                self.greenFlag = 1
-                print("绿灯已打开")
-                self.greenButton.setStyleSheet("background-color: green")
-            else:
-                print("系统未响应")                
-
+        try:
+            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t.start()
+            # t.join() # 主进程卡在这等线程执行完毕
+        except:
+            print("Error: unable to start thread")
 
 
 if __name__ == "__main__":
-    #固定的，PyQt5程序都需要QApplication对象。sys.argv是命令行参数列表，确保程序可以双击运行
+    # 固定的，PyQt5程序都需要QApplication对象。sys.argv是命令行参数列表，确保程序可以双击运行
     app = QApplication(sys.argv)
-    #初始化
+    # 初始化
     serverIP = "192.168.3.20"
-    myWin = MyMainForm(ip=serverIP)
-    #将窗口控件显示在屏幕上
+    # myWin = MyMainForm(ip=serverIP)
+    myWin = MyMainForm()
+    # 将窗口控件显示在屏幕上
+
+    # myWin.setStyleSheet("#MainWindow{border-image:url(./image/backgroundark.png);}") 
+    # myWin.setStyleSheet("#MainWindow{background-color: #f15a22}")
+
+    myWin.setStyleSheet("#MainWindow{background-color: #BEE7E9}")
+
     myWin.show()
-    #程序运行，sys.exit方法确保程序完整退出。
+
+    # 程序运行，sys.exit方法确保程序完整退出。
     sys.exit(app.exec_())
-
-
-    
-
-    
-    

@@ -40,24 +40,16 @@ plt.rcParams.update({'font.size':14})
 
 
 for i in range(5000):
-    # tempId, dataWindow, index = op_mysql.dataWindow(table=table,window_size=50)
+ 
     tempId, dataWindow, index = op_mysql.getData(table=table,id=i+1,window_size=50)
-
-    # x = np.array(range(tempId-50+1,tempId+1))
-    # print(index)
-    # print(x)
-    # print(dataWindow)
+ 
     ph4 = dataWindow[:,0]
     temperture = dataWindow[:,1]
     humility = dataWindow[:,2]
     o2 = dataWindow[:,3]
-    # print(y)
 
     plt.ion()
-    
-    # plt.xlim (0, 50)  # 首先得设置一个x轴的区间 这个是必须的
-    # plt.ylim (50, 100)  # y轴区
-
+  
     plt.clf()  # 清除之前画的图
 
     ax1 = plt.subplot(221)
@@ -97,13 +89,6 @@ for i in range(5000):
     plt.pause (0.01)  # 这个为停顿0.01s，能得到产生实时的效
 
 
-    # while True:
-    #     latestId = op_mysql.last_record(table=table,item_id="id")
-    #     if latestId > tempId:        
-    #         break
-    #     else:
-    #         time.sleep(0.5) # 暂停一段时间，不然画的太快会卡住显示不出来
-    # time.sleep(0.1)
             
 
     

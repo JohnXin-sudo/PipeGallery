@@ -6,42 +6,237 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>256</width>
-    <height>168</height>
+    <width>1529</width>
+    <height>985</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
+  <property name="toolButtonStyle">
+   <enum>Qt::ToolButtonIconOnly</enum>
+  </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="layoutWidget">
+   <widget class="QWidget" name="horizontalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>140</x>
+      <x>10</x>
       <y>10</y>
-      <width>95</width>
-      <height>100</height>
+      <width>1319</width>
+      <height>80</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_3">
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QPushButton" name="fengji">
+      <widget class="QPushButton" name="homeButton">
+       <property name="font">
+        <font>
+         <family>楷体</family>
+         <pointsize>36</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>风机</string>
+        <string>系统概述</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="shuibeng">
+      <widget class="QPushButton" name="listButton">
+       <property name="font">
+        <font>
+         <family>楷体</family>
+         <pointsize>36</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>水泵</string>
+        <string>设备清单</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="baojing">
+      <widget class="QPushButton" name="controlButton">
+       <property name="font">
+        <font>
+         <family>楷体</family>
+         <pointsize>36</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>报警</string>
+        <string>远程控制</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="videoButton">
+       <property name="font">
+        <font>
+         <family>楷体</family>
+         <pointsize>36</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>视频监控</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="yuzhishezhi">
+       <property name="font">
+        <font>
+         <family>楷体</family>
+         <pointsize>36</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>阈值设置</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="gridLayoutWidget_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>90</y>
+      <width>1261</width>
+      <height>901</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="plotCurve"/>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>110</y>
+      <width>371</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>微软雅黑</family>
+      <pointsize>18</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>城市综合管廊智慧管控平台</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="historycommitbutton">
+    <property name="geometry">
+     <rect>
+      <x>1420</x>
+      <y>170</y>
+      <width>93</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>提交</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="historyinput">
+    <property name="geometry">
+     <rect>
+      <x>1270</x>
+      <y>170</y>
+      <width>141</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>1270</x>
+      <y>130</y>
+      <width>231</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Times New Roman</family>
+      <pointsize>14</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>输入查看的历史数据数量</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>1270</x>
+      <y>450</y>
+      <width>241</width>
+      <height>252</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="startrealtimeplot">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>实时数据</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="yellowButton_3">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>关闭实时数据</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="yellowButton_5">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>历史数据</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="yellowButton_6">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>关闭历史数据</string>
        </property>
       </widget>
      </item>
@@ -50,31 +245,88 @@
    <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>95</width>
-      <height>100</height>
+      <x>1270</x>
+      <y>240</y>
+      <width>241</width>
+      <height>201</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="yellowButton">
+    <layout class="QGridLayout" name="gridLayout_3">
+     <item row="0" column="0">
+      <widget class="QPushButton" name="greenButton">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>黄灯</string>
+        <string>绿灯</string>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="0" column="1">
+      <widget class="QPushButton" name="fengji">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>风机</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
       <widget class="QPushButton" name="redButton">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
        <property name="text">
         <string>红灯</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QPushButton" name="greenButton">
+     <item row="1" column="1">
+      <widget class="QPushButton" name="shuibeng">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
        <property name="text">
-        <string>绿灯</string>
+        <string>水泵</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QPushButton" name="yellowButton">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>黄灯</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="baojing">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>报警</string>
        </property>
       </widget>
      </item>
@@ -86,7 +338,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>256</width>
+     <width>1529</width>
      <height>26</height>
     </rect>
    </property>
