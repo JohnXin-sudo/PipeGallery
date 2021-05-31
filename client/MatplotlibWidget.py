@@ -143,29 +143,29 @@ class MyMplCanvas(FigureCanvas):
         self.axe3.clear()
         self.axe4.clear()
 
-        self.axe1.plot(x, ph4, 'b--', label="甲烷")
-        self.axe1.plot(x_pred, ph4_pred, 'r--', label="甲烷预测值")
+        self.axe1.plot(x, ph4, 'bo--', label="甲烷")
+        self.axe1.plot(x_pred, ph4_pred, 'rd--', label="甲烷预测值")
 
         self.axe1.grid(True)
         self.axe1.legend()
         self.xtickRotion(self.axe1.get_xticklabels())  # 设置坐标倾斜
 
-        self.axe2.plot(x, temperture, 'r--', label="温度")
-        self.axe2.plot(x_pred, temperture_pred, 'g--', label="温度预测值")
+        self.axe2.plot(x, temperture, 'bo--', label="温度")
+        self.axe2.plot(x_pred, temperture_pred, 'rd--', label="温度预测值")
         self.axe2.grid(True)
 
         self.axe2.legend()
         self.xtickRotion(self.axe2.get_xticklabels())  # 设置坐标倾斜
 
-        self.axe3.plot(x, humility, "y--", label="湿度")
-        self.axe3.plot(x_pred, humility_pred, "g--", label="湿度预测值")
+        self.axe3.plot(x, humility, "bo--", label="湿度")
+        self.axe3.plot(x_pred, humility_pred, "rd--", label="湿度预测值")
         self.axe3.grid(True)
 
         self.axe3.legend()
         self.xtickRotion(self.axe3.get_xticklabels())  # 设置坐标倾斜
 
-        self.axe4.plot(x, o2, "g--", label="氧气")
-        self.axe4.plot(x_pred, o2_pred, "b--", label="氧气预测值")
+        self.axe4.plot(x, o2, "bo--", label="氧气")
+        self.axe4.plot(x_pred, o2_pred, "rd--", label="氧气预测值")
         self.axe4.grid(True)
         self.axe4.legend()
         self.xtickRotion(self.axe4.get_xticklabels())  # 设置坐标倾斜
@@ -192,6 +192,7 @@ class MyMplCanvas(FigureCanvas):
 
     def forHsitoryThreadsFunction(self, window_size=50, speed=0.1):
         while True:
+            window_size = self.predN
             if self.historyFlag == 0:
                 return
 
@@ -200,7 +201,7 @@ class MyMplCanvas(FigureCanvas):
             # print("数据更新！")
 
     def plotDynamicHistory(self, window_size=50, speed=0.1):
-        window_size = self.predN
+        # window_size = self.predN
         # 防止线程冲突
         if self.historyFlag == 1:
             self.historyFlag = 0

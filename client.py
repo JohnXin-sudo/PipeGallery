@@ -25,8 +25,8 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         # self.setWindowOpacity(1)
         # 设置 无边框
         # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
-        self.setStyleSheet(
-            "#MainWindow{border-image:url(./image/backgroundark.png);}")
+        # self.setStyleSheet(
+        #     "#MainWindow{border-image:url(./image/backgroundark.png);}")
         # self.setWindowIcon(QtGui.QIcon("./images/icon.png"))
         self.setWindowTitle("综合管廊客户端")
 
@@ -92,7 +92,7 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             return
         print(num)
 
-        self.plotCurve.stopPlot()
+        # self.plotCurve.stopPlot()
         print("显示数据数量改变")
         self.plotCurve.changePredN(N=int(num))
         # self.plotCurve.plot(window_size=int(num))
