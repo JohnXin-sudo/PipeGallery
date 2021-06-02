@@ -10,7 +10,14 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from .MatplotlibWidget import MatplotlibWidget
-from PyQt5 import QtWebEngineWidgets
+from PyQt5.QtWebEngineWidgets import *
+
+
+import sys
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtWebEngineWidgets import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -19,6 +26,15 @@ class Ui_MainWindow(object):
         MainWindow.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+#####################################################################################
+        self.stackedWidget = QtWidgets.QStackedWidget(self.centralwidget)
+        # 0, 90, 1261, 901
+        self.stackedWidget.setGeometry(QtCore.QRect(0, 90, 1261, 901))
+        
+ #####################################################################################
+
+
+
         self.horizontalLayoutWidget = QtWidgets.QWidget(self.centralwidget)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 10, 1319, 80))
         self.horizontalLayoutWidget.setObjectName("horizontalLayoutWidget")
@@ -60,7 +76,7 @@ class Ui_MainWindow(object):
         self.yuzhishezhi.setFont(font)
         self.yuzhishezhi.setObjectName("yuzhishezhi")
         self.horizontalLayout.addWidget(self.yuzhishezhi)
-        self.gridLayoutWidget_3 = QtWidgets.QWidget(self.centralwidget)
+        self.gridLayoutWidget_3 = QtWidgets.QWidget(self.stackedWidget)
         self.gridLayoutWidget_3.setGeometry(QtCore.QRect(0, 90, 1261, 901))
         self.gridLayoutWidget_3.setObjectName("gridLayoutWidget_3")
         self.plotCurve = MatplotlibWidget(self.gridLayoutWidget_3)
@@ -243,10 +259,16 @@ class Ui_MainWindow(object):
         # self.statusbar.setObjectName("statusbar")
         # MainWindow.setStatusBar(self.statusbar)
         # self.menubar.addAction(self.menu.menuAction())
+        
 
+
+        
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate

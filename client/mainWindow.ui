@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1524</width>
-    <height>985</height>
+    <width>1355</width>
+    <height>963</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -98,186 +98,23 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>90</y>
-      <width>1261</width>
-      <height>901</height>
+      <y>80</y>
+      <width>1061</width>
+      <height>811</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="plotCurve"/>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>370</x>
-      <y>110</y>
-      <width>371</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>微软雅黑</family>
-      <pointsize>18</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>城市综合管廊智慧管控平台</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="historycommitbutton">
-    <property name="geometry">
-     <rect>
-      <x>1420</x>
-      <y>210</y>
-      <width>93</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>提交</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="historyinput">
-    <property name="geometry">
-     <rect>
-      <x>1270</x>
-      <y>210</y>
-      <width>141</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>1270</x>
-      <y>170</y>
-      <width>231</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>输入查看数据数量</string>
-    </property>
+    <layout class="QGridLayout" name="plotpannel_2"/>
    </widget>
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>1270</x>
-      <y>550</y>
-      <width>347</width>
-      <height>367</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QPushButton" name="startrealtimeplot">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>实时数据</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="stoprealtimeplot">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>关闭实时数据</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="starthistoryplot">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>历史数据</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="stophistoryplot">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>关闭历史数据</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="startpredict">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>实时预测</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="stoppredict">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>关闭实时预测</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>1270</x>
-      <y>340</y>
+      <x>1610</x>
+      <y>240</y>
       <width>241</width>
       <height>201</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_3">
+    <layout class="QGridLayout" name="controlpannel">
      <item row="0" column="0">
       <widget class="QPushButton" name="greenButton">
        <property name="font">
@@ -358,113 +195,250 @@
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>1270</x>
-      <y>250</y>
-      <width>231</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>输入数据回放速度</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="speedCommitbutton">
-    <property name="geometry">
-     <rect>
-      <x>1420</x>
-      <y>290</y>
-      <width>93</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>提交</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="speedinput">
-    <property name="geometry">
-     <rect>
-      <x>1270</x>
-      <y>290</y>
-      <width>141</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>1270</x>
-      <y>90</y>
-      <width>231</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>输入查看数据位置</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="idcommitbutton">
-    <property name="geometry">
-     <rect>
-      <x>1420</x>
+      <x>1080</x>
       <y>130</y>
-      <width>93</width>
-      <height>41</height>
+      <width>241</width>
+      <height>192</height>
      </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>提交</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="idinput">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>1270</x>
-      <y>130</y>
-      <width>141</width>
-      <height>41</height>
+      <x>1930</x>
+      <y>360</y>
+      <width>251</width>
+      <height>181</height>
      </rect>
     </property>
-    <property name="font">
-     <font>
-      <family>Times New Roman</family>
-      <pointsize>14</pointsize>
-     </font>
+    <layout class="QVBoxLayout" name="verticalLayout_2">
+     <item>
+      <widget class="QPushButton" name="stoprealtimeplot">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>关闭实时数据</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stophistoryplot">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>关闭历史数据</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stoppredict">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>关闭实时预测</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>600</y>
+      <width>241</width>
+      <height>243</height>
+     </rect>
     </property>
+    <layout class="QVBoxLayout" name="plotpannel">
+     <item>
+      <widget class="QPushButton" name="startrealtimeplot">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>实时数据</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="starthistoryplot">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>历史数据</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="startpredict">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>实时预测</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="stopplot">
+       <property name="font">
+        <font>
+         <family>AcadEref</family>
+         <pointsize>24</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>停止绘图</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+   <widget class="QWidget" name="">
+    <property name="geometry">
+     <rect>
+      <x>1080</x>
+      <y>340</y>
+      <width>241</width>
+      <height>251</height>
+     </rect>
+    </property>
+    <layout class="QGridLayout" name="commitpannel">
+     <item row="0" column="0" colspan="2">
+      <widget class="QLabel" name="label_3">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>输入查看数据位置</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLineEdit" name="idinput">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="idcommitbutton">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>提交</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" colspan="2">
+      <widget class="QLabel" name="label">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>输入查看数据数量</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLineEdit" name="historyinput">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="historycommitbutton">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>提交</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="2">
+      <widget class="QLabel" name="label_2">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>输入数据回放速度</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLineEdit" name="speedinput">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QPushButton" name="speedCommitbutton">
+       <property name="font">
+        <font>
+         <family>Times New Roman</family>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>提交</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -472,7 +446,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1524</width>
+     <width>1355</width>
      <height>26</height>
     </rect>
    </property>

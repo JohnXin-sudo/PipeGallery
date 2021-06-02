@@ -23,6 +23,7 @@ class OperationMysql():
         self.num = 0
 
         # 创建一个连接数据库的对象
+        # try :
         self.conn = pymysql.connect(
             host=self.ip,  # 连接的数据库服务器主机名
             # port=3306,  # 数据库端口号
@@ -32,8 +33,19 @@ class OperationMysql():
             # charset='utf8',  # 连接编码
             # cursorclass=pymysql.cursors.DictCursor
         )
+        
         # 使用cursor()方法创建一个游标对象，用于操作数据库
         self.cur = self.conn.cursor()
+        # 使用 execute()  方法执行 SQL 查询 
+        self.cur.execute("SELECT VERSION()")
+        
+        # 使用 fetchone() 方法获取单条数据.
+        data = self.cur.fetchone()
+
+        print ("Database version : %s " % data)
+        # except Exception:
+        #     print("数据库连接失败")
+        #     # raise Exception
  
     # 在数据库中插入数据
     def dataWrite2db(self, data, table):
@@ -67,13 +79,18 @@ class OperationMysql():
 
 
 
-    def last_record(self,table,item_id):
+    def last_record(self,item_id="id",table="sensor_data_formated"):
         # 显示数据库表最后一个数据    
         # db = pymysql.connect(host='127.0.0.1', user='root', passwd='XXXXXXXX', db=db_wm, charset='utf8')
         query = "select * from {0} order by {1} desc limit 1;".format(table, item_id)
-        self.cur.execute(query)
-        record_last = self.cur.fetchall()
-        self.conn.commit()
+        try: 
+            self.cur.execute(query)
+            record_last = self.cur.fetchall()
+            self.conn.commit()
+        except Exception:
+            print("last_record查询失败")
+            record_last[0][0] = -1
+
         # print('<' + table + '>' + '数据库中最后一条记录为：', record_last)
         # print(record_last[0][0]) # 获取最后一条记录的ID
 
@@ -95,10 +112,14 @@ class OperationMysql():
         for i in range(0,window_size):
          
             sql = "select ph4,temperature,humidity,o2,time FROM {table} WHERE id={id}".format(table=table,id=currentId+i)
-
-            result = np.array(self.search_one(sql))
-            window.append(result[0:5])
-            time.append(result[-1])
+            try :
+                result = np.array(self.search_one(sql))
+                window.append(result[0:5])
+                time.append(result[-1])
+            except Exception:
+                print("数据库查询失败！")
+                window = np.array(range(window_size))
+                break
         
         # 获取最新50条记录
         # sql = "SELECT * FROM {table} LIMIT {id},{window_size}".format(table=table,id=lastId,window_size=window_size)
@@ -128,11 +149,14 @@ class OperationMysql():
         for i in range(0,window_size):
          
             sql = "select ph4,temperature,humidity,o2,time FROM {table} WHERE id={id}".format(table=table,id=id+i)
-
-            result = np.array(self.search_one(sql))
+            try:
+                result = np.array(self.search_one(sql))
             # print(result)
-            window.append(result[0:5])
-            time.append(result[-1])
+                window.append(result[0:5])
+                time.append(result[-1])
+            except Exception:
+                print("数据库获取数据失败！")
+                np.array(range(window_size))
         
         # 获取最新50条记录
         # sql = "SELECT * FROM {table} LIMIT {id},{window_size}".format(table=table,id=lastId,window_size=window_size)
@@ -150,14 +174,21 @@ class OperationMysql():
 
     # 查询一条数据
     def search_one(self, sql):
-        self.cur.execute(sql)
-        result = self.cur.fetchone()  # 使用 fetchone()方法获取单条数据.只显示一行结果
+        try:
+            self.cur.execute(sql)
+            result = self.cur.fetchone()  # 使用 fetchone()方法获取单条数据.只显示一行结果
         # result = self.cur.fetchall()  # 显示所有结果
+        except Exception:
+            raise Exception
         return result
 
     def search_all(self, sql):
-        self.cur.execute(sql)
-        result = self.cur.fetchall()  # 显示所有结果
+        try:
+            self.cur.execute(sql)
+            result = self.cur.fetchall()  # 显示所有结果
+        # result = self.cur.fetchall()  # 显示所有结果
+        except Exception:
+            raise Exception
         return list(result[0])
  
     # 更新SQL

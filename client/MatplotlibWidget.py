@@ -25,21 +25,27 @@ matplotlib.use("Qt5Agg")
 
 
 # 数据库信息
-user = "root"
-password = "123456"
-database = "pipegallery"
-table = "sensor_data_formated"
+# 这里代码需要优化，把数据库操作的代码和绘图封装一下
+# server_IP = "localhost"     # 视情况修改
+# user = "root"
+# password = "123456"
+# database = "pipegallery"
+# table = "sensor_data_formated"
 
-op_mysql = OperationMysql(user=user, password=password, database=database)
+# op_mysql = OperationMysql(user=user, password=password, database=database,ip=server_IP)
 
 
 class MyMplCanvas(FigureCanvas):
     """FigureCanvas的最终的父类其实是QWidget。"""
 
-    def __init__(self, parent=None, width=6, height=4, dpi=100):
+    def __init__(self, parent=None, width=6, height=4, dpi=100,op_mysql=None):
+        
+        self.op_mysql = op_mysql
+
         plt.rcParams['font.family'] = ['SimHei']
         plt.rcParams['axes.unicode_minus'] = False
-
+        plt.style.use("seaborn-dark-palette")  
+        
         self.fig = plt.Figure(figsize=(width, height), dpi=dpi)
         self.axe1 = self.fig.add_subplot(221)
         self.axe2 = self.fig.add_subplot(222)
@@ -102,7 +108,7 @@ class MyMplCanvas(FigureCanvas):
         self.draw()
 
     def update_figure(self, window_size=50):
-        tempId, dataWindow, index = op_mysql.getData(
+        tempId, dataWindow, index = self.op_mysql.getData(
             id=self.i+1, window_size=window_size)
         self.i += 1
 
@@ -112,7 +118,7 @@ class MyMplCanvas(FigureCanvas):
 
         window_size = self.predN
         step = int(0.25*window_size)
-        tempId, dataWindow, index = op_mysql.getData(
+        tempId, dataWindow, index = self.op_mysql.getData(
                 id=self.i+1, window_size=window_size)
         if window_size < step:
             print("预测步长大于设置数据窗口步长，设置错误。")
@@ -186,7 +192,7 @@ class MyMplCanvas(FigureCanvas):
 
 #######################################################################
     def plotHistory(self, window_size):
-        tempId, dataWindow, index = op_mysql.getData(
+        tempId, dataWindow, index = self.op_mysql.getData(
             id=self.i+1, window_size=window_size)
         self.plot(index, dataWindow)
 
@@ -210,6 +216,7 @@ class MyMplCanvas(FigureCanvas):
         self.historyFlag = 1
         t = threading.Thread(
             target=self.forHsitoryThreadsFunction, args=(window_size, speed))
+        t.setDaemon(True) # 设置线程为守护线程，防止退出主线程时，子线程仍在运行
         t.start()
 
     def stopPlotDynamicHistory(self, *args, **kwargs):
@@ -221,7 +228,7 @@ class MyMplCanvas(FigureCanvas):
 
 #######################################################################
     def update_figureForRealtime(self, id, op_mysql, window_size=50):
-        tempId, dataWindow, index = op_mysql.getData(
+        tempId, dataWindow, index = self.op_mysql.getData(
             id=id, window_size=window_size)
         self.plot(index, dataWindow)
 
@@ -231,7 +238,7 @@ class MyMplCanvas(FigureCanvas):
             self.realtimeFlag = 0
             time.sleep(1)
 
-        tempId = op_mysql.last_record(table=table, item_id="id")
+        tempId = self.op_mysql.last_record(item_id="id")
         currentTime = time.time()
         self.realtimeFlag = 1
 
@@ -243,10 +250,10 @@ class MyMplCanvas(FigureCanvas):
             if time.time()-currentTime > 10:
                 print("实时数据查询超时")
                 return 0
-            latestId = op_mysql.last_record(table=table, item_id="id")
+            latestId = self.op_mysql.last_record(item_id="id")
             if latestId > tempId:
                 self.update_figureForRealtime(
-                    id=latestId-50+1, op_mysql=op_mysql, window_size=50)
+                    id=latestId-50+1, op_mysql=self.op_mysql, window_size=50)
                 continue
             else:
                 tempId = latestId
@@ -254,7 +261,8 @@ class MyMplCanvas(FigureCanvas):
 
     def plotRealTime(self, op_mysql):
         t = threading.Thread(
-            target=self.forRealTimeThreadsFunction, args=(op_mysql,))
+            target=self.forRealTimeThreadsFunction, args=(self.op_mysql,))
+        t.setDaemon(True) # 设置线程为守护线程，防止退出主线程时，子线程仍在运行
         t.start()
 
     def stopPlotRealTime(self):
@@ -282,6 +290,7 @@ class MyMplCanvas(FigureCanvas):
         self.PredicatedFlag = 1
         t = threading.Thread(
             target=self.forPlotPredicatedThreadsFunction, args=(window_size, speed, step))
+        t.setDaemon(True) # 设置线程为守护线程，防止退出主线程时，子线程仍在运行
         t.start()
 
     def stopPlotPredicated(self):
@@ -294,13 +303,14 @@ class MyMplCanvas(FigureCanvas):
 
 
 class MatplotlibWidget(QWidget):
-    def __init__(self, parent=None):
+    def __init__(self, op_mysql,parent=None):
         super(MatplotlibWidget, self).__init__(parent)
 
         #  有待优化
+        self.op_mysql = op_mysql
         self.layout = QVBoxLayout(self)
 
-        self.mpl = MyMplCanvas(self, width=12, height=8, dpi=100)
+        self.mpl = MyMplCanvas(self, width=12, height=8, dpi=100,op_mysql=self.op_mysql)
         self.mpl_ntb = NavigationToolbar(self.mpl, self)
 
         self.layout.addWidget(self.mpl)
