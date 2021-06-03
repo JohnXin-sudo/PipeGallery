@@ -1,6 +1,6 @@
 
 # 导入程序运行必须模块
-import sys
+import sys,os,time
 # PyQt5中使用的基本控件都在PyQt5.QtWidgets模块中
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5 import QtCore, QtGui
@@ -29,6 +29,9 @@ import cv2
 # argvs = sys.argv
 # 支援flash
 # argvs.append('--ppapi-flash-path=./pepflashplayer.dll')
+
+
+
 class WebEngineView(QWebEngineView):
     def createWindow(self,QWebEnginePage_WebWindowType):
         page = WebEngineView(self)
@@ -136,6 +139,11 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.controlGridLayout.setGeometry(QtCore.QRect(10, 100, 1061, 811))
         self.controlGridLayout.setObjectName("controlGridLayout")      
         self.controlGridLayout.setVisible(False)
+
+        print(os.curdir)
+        os.chdir(os.curdir)
+
+        # 只能在当前文件夹下cv2才好用
         # self.controlGridLayout.
         img = cv2.imread("image\icon.png")                 #读取图像                                 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)             #转换图像通道
@@ -152,6 +160,9 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.graphicsView.setScene(self.scene)   
         
         self.graphicsView.setStyleSheet("background: transparent;border:0px") 
+        self.graphicsView.setHorizontalScrollBarPolicy(PyQt5.QtCore.Qt.ScrollBarAlwaysOff)
+        self.graphicsView.setVerticalScrollBarPolicy(PyQt5.QtCore.Qt.ScrollBarAlwaysOff)
+
 
 
         self.homeButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
@@ -176,50 +187,56 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         # 导航栏
         self.tab = ['系统概述', '设备清单',"远程控制","视频监控","阈值设置"]   
 
+        
         self.stackedWidget.addWidget(self.plotCurve)
         self.stackedWidget.addWidget(self.web)
+        self.stackedWidget.setVisible(True)
 
-        # 网页
-        self.web.load(QUrl("https://www.bilibili.com/video/BV1T5411M7pk"))
+        # 加载网站网页
+        # self.web.load(QUrl("https://www.bilibili.com"))
+        # 加载本地网页
+        # self.web.load(QUrl("file:.///video.html"))
+        'file:///E:/****/test.html'
+        # 先读取后设置
+        self.webFlag = 0 # 用于判断浏览器功能是否打开
+        f = open("video.html",'r',encoding='utf-8')
+        self.html = f.read()
+        f.close()   
+        self.web.setHtml(self.html)
+
         self.web.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
         self.web.settings().setAttribute(QWebEngineSettings.JavascriptEnabled, True)
         self.web.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
 
-
-       
-
-        
-        try:
-            t = threading.Thread(target=lambda: self.web.show())
-            t.setDaemon(True) # 设置线程为守护线程，防止退出主线程时，子线程仍在运行
-            t.start()
-        except Exception:
-            print("浏览器线程启动失败")
-        
 #####################################################################################
 
         # homeButton listButton
-        self.homeButton.clicked.connect(lambda: self.update_(self.homeButton))
-        self.listButton.clicked.connect(lambda: self.update_(self.listButton))
+        self.homeButton.clicked.connect(lambda: self.stackedWidgetThread(self.homeButton))
+        self.listButton.clicked.connect(lambda: self.stackedWidgetThread(self.listButton))
 
         
 #####################################################################################
-
-
-
-    def update_(self,btn):
+    def stackedWidgetThread(self,btn):
         """
         用按钮实现上端导航栏的切换功能
         """
         if btn.text() == "设备清单":
-            self.stackedWidget.setGeometry(self.rectWeb)
-            pass
+            self.stackedWidget.setGeometry(self.rectWeb) 
+       
+            try:
+                if  not self.webFlag: 
+                    self.web.show()
+                    self.webFlag = 1
+            except Exception:
+                print("浏览器线程启动失败")            
             # self.listButton.setStyleSheet("background-color: gray")
-        elif btn.text() == "系统概述":
+        if btn.text() == "系统概述":
             self.stackedWidget.setGeometry(self.rect)
             
         # print(btn.text)    
+        # self.stackedWidget.setVisible(True)
         self.stackedWidget.setCurrentIndex(self.tab.index(btn.text()))
+        
 
     def stopPlot(self):
         self.plotCurve.stopPlotPredicated()
