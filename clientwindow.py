@@ -42,23 +42,13 @@ class WebEngineView(QWebEngineView):
 
 
 class MyMainForm(QMainWindow, Ui_MainWindow):
-    def __init__(self, op_mysql,parent=None, ip="192.168.3.20"):
+    def __init__(self, op_mysql,regData=None,parent=None, ip="192.168.3.20"):
 
-
-        # 1. 用户注册
-        # try :
-        #     self.serverIP = ip
-        #     self.regData = userRegister(ip=serverIP)
-        # except Exception:
-        #     print("用户信息获取失败")
-
+        # 管廊系统用户信息
+        self.regData = regData
         # 数据库信息
         self.op_mysql = op_mysql
-                     #将场景添加至视图
- 
-
-
-
+        #将场景添加至视图
         super(MyMainForm, self).__init__(parent)
         self.setupUi(self)
 
@@ -67,14 +57,13 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         # self.setWindowOpacity(1)
         # 设置 无边框
         # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
-        # self.setStyleSheet(
-            # "#MainWindow{border-image:url(./image/backgroundark.png);}")
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(".\\images\\icon.png"),QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        # icon = QtGui.QIcon(".\\images\\icon.ico") 
+        self.setStyleSheet("#MainWindow{border-image:url(./image/backgroundark.png);}")
+        # icon = QtGui.QIcon()
+        # icon.addPixmap(QtGui.QPixmap(".\\images\\icon.png"),QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon = QtGui.QIcon(".\\images\\icon.ico") 
         self.setWindowIcon(icon)
-        self.setWindowTitle("综合管廊客户端")
 
+        self.setWindowTitle("综合管廊客户端")
 
         # 黄灯 button
         self.yellowButton.clicked.connect(self.yellowButtonClicked)
