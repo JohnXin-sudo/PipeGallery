@@ -29,18 +29,41 @@ from client.PlotWidget import PlotWidget
 
 import cv2
 
+# 是任务栏图标发生改变
+import ctypes
+ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("myappid")
 
 # argvs = sys.argv
 # 支援flash
 # argvs.append('--ppapi-flash-path=./pepflashplayer.dll')
 
 
-
+# 视频监控部件
 class WebEngineView(QWebEngineView):
+
+    def __init__(self):
+        super(WebEngineView,self).__init__() 
+                # 加载网站网页
+        # self.web.load(QUrl("https://www.bilibili.com"))
+        # 加载本地网页
+        # self.web.load(QUrl("file:.///video.html"))
+        'file:///E:/****/test.html'
+        # 先读取后设置
+        self.webFlag = 0 # 用于判断浏览器功能是否打开
+        f = open("video.html",'r',encoding='utf-8')
+        self.html = f.read()
+        f.close()   
+        self.setHtml(self.html)
+
+        self.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
+        self.settings().setAttribute(QWebEngineSettings.JavascriptEnabled, True)
+        self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+
     def createWindow(self,QWebEnginePage_WebWindowType):
         page = WebEngineView(self)
         page.urlChanged.connect(self.on_url_changed)
         return page
+
     def on_url_changed(self,url):
         self.setUrl(url)
 
@@ -61,7 +84,7 @@ class PlotForm(QtWidgets.QWidget,PlotWidget):
         self.plotCurve.show()
         # 实现界面的图片显示
         # 只能在当前文件夹下cv2才好用
-        img = cv2.imread("image\icon.png")                 #读取图像                                 
+        img = cv2.imread("image\shmtu-badge.png")                 #读取图像                                 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)             #转换图像通道
         x = img.shape[1]                                        #获取图像大小
         y = img.shape[0]
@@ -325,6 +348,60 @@ class ControlForm(QtWidgets.QWidget,Ui_Form):
         except:
             print("Error: unable to start thread")
 
+# 程序托盘类
+class TrayIcon(QtWidgets.QSystemTrayIcon):
+    def __init__(self,MainWindow,parent=None):
+        super(TrayIcon, self).__init__(parent)
+        self.ui = MainWindow
+        self.createMenu()
+    
+    def createMenu(self):
+        self.menu = QtWidgets.QMenu()
+        self.showAction1 = QtWidgets.QAction("启动", self, triggered=self.show_window)
+        self.showAction2 = QtWidgets.QAction("显示通知", self,triggered=self.showMsg)
+        self.quitAction = QtWidgets.QAction("退出", self, triggered=self.quit)
+ 
+        self.menu.addAction(self.showAction1)
+        self.menu.addAction(self.showAction2)
+        self.menu.addAction(self.quitAction)
+        self.setContextMenu(self.menu)
+ 
+        #设置图标
+        self.setIcon(QtGui.QIcon("image/icon1.ico"))
+        self.icon = self.MessageIcon()
+ 
+        #把鼠标点击图标的信号和槽连接
+        self.activated.connect(self.onIconClicked)
+ 
+    def showMsg(self):
+        self.showMessage("Message", "skr at here", self.icon)
+ 
+    def show_window(self):
+        #若是最小化，则先正常显示窗口，再变为活动窗口（暂时显示在最前面）
+        self.ui.showNormal()
+        self.ui.activateWindow()
+        
+ 
+    def quit(self):
+        QtWidgets.qApp.quit()
+ 
+    #鼠标点击icon传递的信号会带有一个整形的值，1是表示单击右键，2是双击，3是单击左键，4是用鼠标中键点击
+    def onIconClicked(self, reason):
+        if reason == 2 or reason == 3:
+            # self.showMessage("Message", "skr at here", self.icon)
+            if self.ui.isMinimized() or not self.ui.isVisible():
+                #若是最小化，则先正常显示窗口，再变为活动窗口（暂时显示在最前面）
+                self.ui.showNormal()
+                self.ui.activateWindow()
+                self.ui.setWindowFlags(QtCore.Qt.Window)
+                self.ui.show()
+            else:
+                #若不是最小化，则最小化
+                self.ui.showMinimized()
+                self.ui.setWindowFlags(QtCore.Qt.SplashScreen)
+                self.ui.show()
+                # self.ui.show()
+
 
 class MyMainForm(QMainWindow, Ui_MainWindow):
     def __init__(self, op_mysql,regData=None,parent=None, ip="192.168.3.20"):
@@ -339,41 +416,47 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         #将场景添加至视图
         super(MyMainForm, self).__init__(parent)
         self.setupUi(self)
+#####################################################################################
+
+#####################################################################################
+
         # self.setWindowOpacity(1)
         # 设置 无边框
+        # https://blog.csdn.net/kobeyu652453/article/details/108362771?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-5.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-5.control
+
         # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setStyleSheet("#MainWindow{border-image:url(./image/backgroundark.png);}")
-        # icon = QtGui.QIcon()
-        # icon.addPixmap(QtGui.QPixmap(".\\images\\icon.png"),QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon = QtGui.QIcon(".\\images\\icon.ico") 
+        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
+        self.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
+
+  
+        icon = QtGui.QIcon(".\\image\\icon1.ico") 
         self.setWindowIcon(icon)
         self.setWindowTitle("综合管廊客户端")
+#####################################################################################
 
 #####################################################################################
         self.rectWeb = QtCore.QRect(10, 100, 1320, 811)
         self.hide = QtCore.QRect(0, 0, 0, 0)
-
         # 重写部分功能
         # 实现一个堆叠控件用于切换界面
         self.stackedWidget = PyQt5.QtWidgets.QStackedWidget(self.centralwidget)
         self.stackedWidget.setGeometry(self.rectWeb)
         # 系统首界面 绘制图形
-        # ,parent=self.stackedWidget
         self.plotWidget = PlotForm(op_mysql=self.op_mysql)    
         # 视频监控通过web实现
-        self.web = WebEngineView(self.stackedWidget) 
+        self.web = WebEngineView() 
         # 控制面板 通过widegt实现
         self.controlWidget = ControlForm(regData=self.regData,serverIP=self.serverIP)        
         # 设备清单 通过widegt实现 现在尚未实现
-        self.listShow = QtWidgets.QWidget(self.stackedWidget)   
+        self.listWidget = QtWidgets.QWidget(self.stackedWidget)   
 
         # 实现头部导航栏的按钮样式
-        self.homeButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
-        self.listButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
-        self.controlButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
-        self.videoButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
-        self.yuzhishezhi.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
-   
+        self.homeButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
+        self.listButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
+        self.controlButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
+        self.videoButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
+        self.yuzhishezhi.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
 #####################################################################################
 
 #####################################################################################
@@ -382,52 +465,32 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         
         self.stackedWidget.addWidget(self.plotWidget) # 系统概述
         self.plotWidget.show()
-        self.stackedWidget.addWidget(self.listShow) # 设备清单
+        self.stackedWidget.addWidget(self.listWidget) # 设备清单
         self.stackedWidget.addWidget(self.controlWidget) #远程控制
         self.stackedWidget.addWidget(self.web) # 视频监控
         
         self.stackedWidget.setVisible(True)
-
-        # 加载网站网页
-        # self.web.load(QUrl("https://www.bilibili.com"))
-        # 加载本地网页
-        # self.web.load(QUrl("file:.///video.html"))
-        'file:///E:/****/test.html'
-        # 先读取后设置
-        self.webFlag = 0 # 用于判断浏览器功能是否打开
-        f = open("video.html",'r',encoding='utf-8')
-        self.html = f.read()
-        f.close()   
-        self.web.setHtml(self.html)
-
-        self.web.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
-        self.web.settings().setAttribute(QWebEngineSettings.JavascriptEnabled, True)
-        self.web.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+#####################################################################################
+        self.buttonClicked() 
 
 #####################################################################################
-        self.buttonClicked()     
-#####################################################################################
+
     def stackedWidgetThread(self,btn):
         """
         用按钮实现上端导航栏的切换功能
         """
         if btn.text() == "系统概述":
-            self.plotWidget.show()
+            # self.plotWidget.show()
             self.stackedWidget.setGeometry(self.rectWeb)
         if btn.text() == "设备清单":
-            self.stackedWidget.setGeometry(self.rectWeb)            
+            self.stackedWidget.setGeometry(self.rectWeb) 
+            # self.listWidget.show()           
         if btn.text() == "远程控制":         
             self.stackedWidget.setGeometry(self.rectWeb)
-            self.controlWidget.show()
+            # self.controlWidget.show()
         if btn.text() == "视频监控":
-            self.stackedWidget.setGeometry(self.rectWeb)       
-            try:
-                if  not self.webFlag: 
-                    self.web.show()
-                    self.webFlag = 1
-            except Exception:
-                print("浏览器线程启动失败")            
-
+            self.stackedWidget.setGeometry(self.rectWeb)     
+                  
         self.stackedWidget.setCurrentIndex(self.tab.index(btn.text()))
 
     def buttonClicked(self):
@@ -436,6 +499,7 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.listButton.clicked.connect(lambda: self.stackedWidgetThread(self.listButton))
         self.controlButton.clicked.connect(lambda: self.stackedWidgetThread(self.controlButton))
         self.videoButton.clicked.connect(lambda: self.stackedWidgetThread(self.videoButton))
+
 
 
 
