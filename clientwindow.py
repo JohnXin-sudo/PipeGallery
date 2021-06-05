@@ -22,6 +22,7 @@ from register import userRegister
 from actuator import actuator
 from database import OperationMysql
 from client.MatplotlibWidget import MatplotlibWidget
+from client.ControlWidget import Ui_Form
 
 import cv2
 
@@ -40,6 +41,12 @@ class WebEngineView(QWebEngineView):
     def on_url_changed(self,url):
         self.setUrl(url)
 
+# control Form 部件类 通过qtdesigner设计
+class ControlForm(QtWidgets.QWidget,Ui_Form): 
+  def __init__(self): 
+    super(ControlForm,self).__init__() 
+    self.setupUi(self)
+
 
 class MyMainForm(QMainWindow, Ui_MainWindow):
     def __init__(self, op_mysql,regData=None,parent=None, ip="192.168.3.20"):
@@ -52,8 +59,6 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         super(MyMainForm, self).__init__(parent)
         self.setupUi(self)
 
-
-
         # self.setWindowOpacity(1)
         # 设置 无边框
         # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
@@ -65,75 +70,28 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
 
         self.setWindowTitle("综合管廊客户端")
 
-        # 黄灯 button
-        self.yellowButton.clicked.connect(self.yellowButtonClicked)
-        self.yellowFlag = 0
-        self.yellowButton.setStyleSheet("background-color: gray")
 
-        # 红灯 button
-        self.redButton.clicked.connect(self.redButtonClicked)
-        self.redFlag = 0
-        self.redButton.setStyleSheet("background-color: gray")
-
-        # 绿灯button
-        self.greenButton.clicked.connect(self.greenButtonClicked)
-        self.greenFlag = 0
-        self.greenButton.setStyleSheet("background-color: gray")
-
-        # 风机button
-        self.fengji.clicked.connect(self.fengjiButtonClicked)
-        self.fengjiFlag = 0
-        self.fengji.setStyleSheet("background-color: gray")
-        # 报警灯button
-        self.baojing.clicked.connect(self.baojingButtonClicked)
-        self.baojingFlag = 0
-        self.baojing.setStyleSheet("background-color: gray")
-        # # # 水泵button
-        self.shuibeng.clicked.connect(self.shuibengButtonClicked)
-        self.shuibengFlag = 0
-        self.shuibeng.setStyleSheet("background-color: gray")
-
-        self.startrealtimeplot.clicked.connect(self.startRealTimePlot)
-        self.stoprealtimeplot.clicked.connect(self.stopRealTimePlot)
-        self.starthistoryplot.clicked.connect(self.startHistoryPlot)
-        self.stophistoryplot.clicked.connect(self.stopHistoryPlot)
-        self.startpredict.clicked.connect(self.startpredictPlot)
-        self.stoppredict.clicked.connect(self.stoppredictPlot)
-        self.stopplot.clicked.connect(self.stopPlot)
-
-
-        self.historycommitbutton.clicked.connect(self.historyCommit)
-        self.speedCommitbutton.clicked.connect(self.speedCommit)
-        self.idcommitbutton.clicked.connect(self.idCommit)
 #####################################################################################
-
         self.rect = QtCore.QRect(10, 100, 1061, 811)
         self.rectWeb = QtCore.QRect(10, 100, 1320, 811)
+        self.hide = QtCore.QRect(0, 0, 0, 0)
 
         # 重写部分功能
+        # 实现一个堆叠控件用于切换界面
         self.stackedWidget = PyQt5.QtWidgets.QStackedWidget(self.centralwidget)
-        # 0, 90, 1261, 901
-        self.stackedWidget.setGeometry(QtCore.QRect(10, 100, 1061, 811))
+        self.stackedWidget.setGeometry(self.rect)
+        # 系统首界面 绘制图形
+        self.plotCurve = MatplotlibWidget(parent=self.stackedWidget, op_mysql=self.op_mysql)
+        self.plotCurve.setContentsMargins(0, 0, 0, 0)     
+        # 视频监控通过web实现
+        self.web = WebEngineView(self.stackedWidget) 
+        # 控制面板 通过widegt实现
+        self.controlWidget = ControlForm()        
+        # 设备清单 通过widegt实现 现在尚未实现
+        self.listShow = QtWidgets.QWidget(self.stackedWidget)   
 
-        self.plotpannel = QtWidgets.QWidget(self.stackedWidget)
-        # self.plotpannel.setGeometry(QtCore.QRect(10, 100, 1061, 811))
-        self.plotpannel.setObjectName("plotpannel")        
-
-        self.plotCurve = MatplotlibWidget(parent=self.plotpannel, op_mysql=self.op_mysql)
-        self.plotCurve.setContentsMargins(0, 0, 0, 0)        
-        
-        self.web = WebEngineView(self.stackedWidget)   
-
-        self.controlGridLayout = QtWidgets.QWidget(self.stackedWidget)
-        self.controlGridLayout.setGeometry(QtCore.QRect(10, 100, 1061, 811))
-        self.controlGridLayout.setObjectName("controlGridLayout")      
-        self.controlGridLayout.setVisible(False)
-
-        print(os.curdir)
-        os.chdir(os.curdir)
-
+        # 实现界面的图片显示
         # 只能在当前文件夹下cv2才好用
-        # self.controlGridLayout.
         img = cv2.imread("image\icon.png")                 #读取图像                                 
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)             #转换图像通道
         x = img.shape[1]                                        #获取图像大小
@@ -153,18 +111,16 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.graphicsView.setVerticalScrollBarPolicy(PyQt5.QtCore.Qt.ScrollBarAlwaysOff)
 
 
-
+        # 实现头部导航栏的按钮样式
         self.homeButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
         self.listButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
         self.controlButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
         self.videoButton.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
         self.yuzhishezhi.setStyleSheet('QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:blue;}')
 
-
         self.label.setStyleSheet("color:white")
         self.label_2.setStyleSheet("color:white")
         self.label_3.setStyleSheet("color:white")
-
 
         self.plotCurve.setStyleSheet("background: transparent;border:0px") 
 
@@ -175,10 +131,12 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
 #####################################################################################
         # 导航栏
         self.tab = ['系统概述', '设备清单',"远程控制","视频监控","阈值设置"]   
-
         
-        self.stackedWidget.addWidget(self.plotCurve)
-        self.stackedWidget.addWidget(self.web)
+        self.stackedWidget.addWidget(self.plotCurve) # 系统概述
+        self.stackedWidget.addWidget(self.listShow) # 设备清单
+        self.stackedWidget.addWidget(self.controlWidget) #远程控制
+        self.stackedWidget.addWidget(self.web) # 视频监控
+        
         self.stackedWidget.setVisible(True)
 
         # 加载网站网页
@@ -198,20 +156,28 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.web.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
 
 #####################################################################################
-
-        # homeButton listButton
-        self.homeButton.clicked.connect(lambda: self.stackedWidgetThread(self.homeButton))
-        self.listButton.clicked.connect(lambda: self.stackedWidgetThread(self.listButton))
-
-        
+        self.buttonClicked()     
 #####################################################################################
     def stackedWidgetThread(self,btn):
         """
         用按钮实现上端导航栏的切换功能
         """
+        if btn.text() == "系统概述":
+            self.showSide()
+            self.stackedWidget.setGeometry(self.rect)
         if btn.text() == "设备清单":
-            self.stackedWidget.setGeometry(self.rectWeb) 
-       
+            self.hideSide()
+            self.stackedWidget.setGeometry(self.rectWeb)            
+        if btn.text() == "远程控制":
+            self.hideSide()            
+            self.stackedWidget.setGeometry(self.rectWeb)
+
+            # self.controlWidget.controlpannel.setGeometry(self.rectWeb)
+            self.controlWidget.show()
+            # self.controlWidget.raise_()
+        if btn.text() == "视频监控":
+            self.hideSide()
+            self.stackedWidget.setGeometry(self.rectWeb)       
             try:
                 if  not self.webFlag: 
                     self.web.show()
@@ -219,13 +185,89 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             except Exception:
                 print("浏览器线程启动失败")            
             # self.listButton.setStyleSheet("background-color: gray")
-        if btn.text() == "系统概述":
-            self.stackedWidget.setGeometry(self.rect)
-            
-        # print(btn.text)    
-        # self.stackedWidget.setVisible(True)
+
         self.stackedWidget.setCurrentIndex(self.tab.index(btn.text()))
+
+    def buttonClicked(self):
         
+        self.homeButton.clicked.connect(lambda: self.stackedWidgetThread(self.homeButton))
+        self.listButton.clicked.connect(lambda: self.stackedWidgetThread(self.listButton))
+        self.controlButton.clicked.connect(lambda: self.stackedWidgetThread(self.controlButton))
+        self.videoButton.clicked.connect(lambda: self.stackedWidgetThread(self.videoButton))
+
+
+        # 黄灯 button
+        self.controlWidget.yellowButton.clicked.connect(self.yellowButtonClicked)
+        self.yellowFlag = 0
+        self.controlWidget.yellowButton.setStyleSheet("background-color: gray")
+
+        # 红灯 button
+        self.controlWidget.redButton.clicked.connect(self.redButtonClicked)
+        self.redFlag = 0
+        self.controlWidget.redButton.setStyleSheet("background-color: gray")
+
+        # 绿灯button
+        self.controlWidget.greenButton.clicked.connect(self.greenButtonClicked)
+        self.greenFlag = 0
+        self.controlWidget.greenButton.setStyleSheet("background-color: gray")
+
+        # 风机button
+        self.controlWidget.fengji.clicked.connect(self.fengjiButtonClicked)
+        self.fengjiFlag = 0
+        self.controlWidget.fengji.setStyleSheet("background-color: gray")
+        # 报警灯button
+        self.controlWidget.baojing.clicked.connect(self.baojingButtonClicked)
+        self.baojingFlag = 0
+        self.controlWidget.baojing.setStyleSheet("background-color: gray")
+        # # # 水泵button
+        self.controlWidget.shuibeng.clicked.connect(self.shuibengButtonClicked)
+        self.shuibengFlag = 0
+        self.controlWidget.shuibeng.setStyleSheet("background-color: gray")
+
+        self.startrealtimeplot.clicked.connect(self.startRealTimePlot)
+        self.stoprealtimeplot.clicked.connect(self.stopRealTimePlot)
+        self.starthistoryplot.clicked.connect(self.startHistoryPlot)
+        self.stophistoryplot.clicked.connect(self.stopHistoryPlot)
+        self.startpredict.clicked.connect(self.startpredictPlot)
+        self.stoppredict.clicked.connect(self.stoppredictPlot)
+        self.stopplot.clicked.connect(self.stopPlot)
+
+
+        self.historycommitbutton.clicked.connect(self.historyCommit)
+        self.speedCommitbutton.clicked.connect(self.speedCommit)
+        self.idcommitbutton.clicked.connect(self.idCommit)
+
+
+    def hideSide(self):
+        self.graphicsView.hide()
+        self.label.hide()
+        self.label_2.hide()
+        self.label_3.hide()
+        self.idinput.hide()
+        self.historyinput.hide()
+        self.speedinput.hide()
+        self.idcommitbutton.hide()
+        self.historycommitbutton.hide()
+        self.speedCommitbutton.hide()
+        self.startrealtimeplot.hide()
+        self.starthistoryplot.hide()
+        self.startpredict.hide()
+        self.stopplot.hide()
+    def showSide(self):
+        self.graphicsView.show()
+        self.label.show()
+        self.label_2.show()
+        self.label_3.show()
+        self.idinput.show()
+        self.historyinput.show()
+        self.speedinput.show()
+        self.idcommitbutton.show()
+        self.historycommitbutton.show()
+        self.speedCommitbutton.show()
+        self.startrealtimeplot.show()
+        self.starthistoryplot.show()
+        self.startpredict.show()
+        self.stopplot.show()      
 
     def stopPlot(self):
         self.plotCurve.stopPlotPredicated()

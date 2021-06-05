@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1338</width>
+    <height>845</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QPushButton" name="yellowButton">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>471</y>
+     <width>116</width>
+     <height>55</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>AcadEref</family>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>黄灯</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="greenButton">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>337</y>
+     <width>116</width>
+     <height>55</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>AcadEref</family>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>绿灯</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="redButton">
+   <property name="geometry">
+    <rect>
+     <x>730</x>
+     <y>404</y>
+     <width>116</width>
+     <height>55</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>AcadEref</family>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>红灯</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="baojing">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>474</y>
+     <width>109</width>
+     <height>55</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>AcadEref</family>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>报警</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="shuibeng">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>407</y>
+     <width>109</width>
+     <height>55</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>AcadEref</family>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>水泵</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="fengji">
+   <property name="geometry">
+    <rect>
+     <x>550</x>
+     <y>340</y>
+     <width>109</width>
+     <height>55</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>AcadEref</family>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>风机</string>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

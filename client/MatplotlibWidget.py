@@ -45,12 +45,14 @@ class MyMplCanvas(FigureCanvas):
         plt.rcParams['font.family'] = ['SimHei']
         plt.rcParams['axes.unicode_minus'] = False
         plt.style.use("seaborn-dark-palette")  
-        
+
+
         self.fig = plt.Figure(figsize=(width, height), dpi=dpi)
         self.axe1 = self.fig.add_subplot(221)
         self.axe2 = self.fig.add_subplot(222)
         self.axe3 = self.fig.add_subplot(223)
         self.axe4 = self.fig.add_subplot(224)
+        self.fig.set_tight_layout(True)
 
         FigureCanvas.__init__(self, self.fig)
         self.setParent(parent)

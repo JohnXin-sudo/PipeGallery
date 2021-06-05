@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1355</width>
-    <height>963</height>
+    <width>1339</width>
+    <height>961</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -105,107 +105,17 @@
     </property>
     <layout class="QGridLayout" name="plotpannel_2"/>
    </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>1610</x>
-      <y>240</y>
-      <width>241</width>
-      <height>201</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="controlpannel">
-     <item row="0" column="0">
-      <widget class="QPushButton" name="greenButton">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>绿灯</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QPushButton" name="fengji">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>风机</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QPushButton" name="redButton">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>红灯</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QPushButton" name="shuibeng">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>水泵</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="0">
-      <widget class="QPushButton" name="yellowButton">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>黄灯</string>
-       </property>
-      </widget>
-     </item>
-     <item row="2" column="1">
-      <widget class="QPushButton" name="baojing">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>报警</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
       <x>1080</x>
-      <y>130</y>
+      <y>101</y>
       <width>241</width>
-      <height>192</height>
+      <height>221</height>
      </rect>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>1930</x>
@@ -256,7 +166,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>1080</x>
@@ -320,7 +230,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>1080</x>
@@ -440,22 +350,6 @@
      </item>
     </layout>
    </widget>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>1355</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>管廊控制</string>
-    </property>
-   </widget>
-   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
