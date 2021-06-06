@@ -15,12 +15,18 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtWebEngineWidgets import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView,QWebEngineSettings
+from PyQt5.QtWebChannel import QWebChannel
+
+from PyQt5.QtCore import QObject, pyqtSlot, QUrl
+from PyQt5.QtGui import QImage,QTextDocument,QTextCursor
+from PyQt5.QtPrintSupport import QPrinter
+import base64
 
 # from client.main_1 import Ui_MainWindow  # 测试
 from client.main import Ui_MainWindow
-from register import userRegister
-from actuator import actuator
-from database import OperationMysql
+from utils.register import userRegister
+from utils.actuator import actuator
+from utils.database import OperationMysql
 
 
 from client.MatplotlibWidget import MatplotlibWidget
@@ -33,9 +39,34 @@ import cv2
 import ctypes
 ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("myappid")
 
-# argvs = sys.argv
-# 支援flash
-# argvs.append('--ppapi-flash-path=./pepflashplayer.dll')
+
+
+# js调用python的处理类，实现各种js调用的函数
+class WebChannelDeal(QObject):
+    def __init__(self):
+        super().__init__()
+
+    # pyqtSlot槽函数用以处理同名的监听事件
+    @pyqtSlot(str,result=str)
+    def print_img(self,img_url):
+        #去掉头部的base64标示
+        img_url=img_url.replace('data:image/png;base64,', '')
+        #将base64解码成二进制
+        url=base64.b64decode(img_url)
+        #QImage加载二进制，形成图片流
+        image=QImage()
+        image.loadFromData(url)
+        '''直接输出打印到pdf'''
+        printer=QPrinter()
+        printer.setOutputFormat(QPrinter.PdfFormat)
+        printer.setOutputFileName('test.pdf')
+        #实例化一个富文本
+        document=QTextDocument()
+        cursor=QTextCursor(document)
+        cursor.insertImage(image)
+        #调用print（）方法 参数为当前实例化的打印函数
+        document.print(printer)
+        return 'sucess'         #处理成功传回success，返回信息被js回调函数处理
 
 
 # 视频监控部件
@@ -43,22 +74,20 @@ class WebEngineView(QWebEngineView):
 
     def __init__(self):
         super(WebEngineView,self).__init__() 
-                # 加载网站网页
-        # self.web.load(QUrl("https://www.bilibili.com"))
-        # 加载本地网页
-        # self.web.load(QUrl("file:.///video.html"))
-        'file:///E:/****/test.html'
-        # 先读取后设置
-        self.webFlag = 0 # 用于判断浏览器功能是否打开
-        f = open("video.html",'r',encoding='utf-8')
-        self.html = f.read()
-        f.close()   
-        self.setHtml(self.html)
+
+        self.load(QUrl('file:///./html/index.html'))
 
         self.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
         self.settings().setAttribute(QWebEngineSettings.JavascriptEnabled, True)
         self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
 
+        # 实现js调用python代码
+        self.channel = QWebChannel()
+        self.webChannelDeal = WebChannelDeal()
+        self.channel.registerObject('pyjs', self.webChannelDeal)
+        self.page().setWebChannel(self.channel)
+
+    # 实现页面内部网页跳转
     def createWindow(self,QWebEnginePage_WebWindowType):
         page = WebEngineView(self)
         page.urlChanged.connect(self.on_url_changed)
@@ -66,6 +95,17 @@ class WebEngineView(QWebEngineView):
 
     def on_url_changed(self,url):
         self.setUrl(url)
+ 
+    # python调用js的回调函数
+    def js_callback(self,result):
+        print(result)
+    # python调用js的函数
+    def call_Js(self):
+        #向js中传值
+        value='python send'
+        self.page().runJavaScript('Transport("'+value+'");',self.js_callback)  #第一个参数是调用html中js。第二个参数是js的返回值  。注意：第一个参数有传值的话，一定有双引号
+ 
+
 
 # 首页绘图部件
 class PlotForm(QtWidgets.QWidget,PlotWidget): 
@@ -426,8 +466,8 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
 
         # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setStyleSheet("#MainWindow{border-image:url(./image/backgroundark.png);}")
-        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
-        self.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
+        # self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
+        # self.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
 
   
         icon = QtGui.QIcon(".\\image\\icon1.ico") 
@@ -436,7 +476,7 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
 #####################################################################################
 
 #####################################################################################
-        self.rectWeb = QtCore.QRect(10, 100, 1320, 811)
+        self.rectWeb = QtCore.QRect(10, 80, 1341, 871)
         self.hide = QtCore.QRect(0, 0, 0, 0)
         # 重写部分功能
         # 实现一个堆叠控件用于切换界面
@@ -480,15 +520,20 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         用按钮实现上端导航栏的切换功能
         """
         if btn.text() == "系统概述":
-            # self.plotWidget.show()
+            pass
+            self.plotWidget.show()
             self.stackedWidget.setGeometry(self.rectWeb)
         if btn.text() == "设备清单":
+            pass
             self.stackedWidget.setGeometry(self.rectWeb) 
-            # self.listWidget.show()           
-        if btn.text() == "远程控制":         
+            self.listWidget.show()           
+        if btn.text() == "远程控制": 
+            pass        
             self.stackedWidget.setGeometry(self.rectWeb)
-            # self.controlWidget.show()
+            self.controlWidget.show()
         if btn.text() == "视频监控":
+            self.web.show()
+            pass
             self.stackedWidget.setGeometry(self.rectWeb)     
                   
         self.stackedWidget.setCurrentIndex(self.tab.index(btn.text()))
@@ -496,7 +541,9 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
     def buttonClicked(self):
         
         self.homeButton.clicked.connect(lambda: self.stackedWidgetThread(self.homeButton))
-        self.listButton.clicked.connect(lambda: self.stackedWidgetThread(self.listButton))
+        # self.listButton.clicked.connect(lambda: self.stackedWidgetThread(self.listButton))
+        self.listButton.clicked.connect(lambda: self.web.call_Js())
+
         self.controlButton.clicked.connect(lambda: self.stackedWidgetThread(self.controlButton))
         self.videoButton.clicked.connect(lambda: self.stackedWidgetThread(self.videoButton))
 

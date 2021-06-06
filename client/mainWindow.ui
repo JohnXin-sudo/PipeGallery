@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1339</width>
-    <height>943</height>
+    <width>1361</width>
+    <height>941</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,136 +17,115 @@
    <enum>Qt::ToolButtonIconOnly</enum>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="horizontalLayoutWidget">
+   <widget class="QFrame" name="frame">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>1319</width>
-      <height>80</height>
+      <x>0</x>
+      <y>0</y>
+      <width>1351</width>
+      <height>941</height>
      </rect>
     </property>
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QPushButton" name="homeButton">
-       <property name="font">
-        <font>
-         <family>楷体</family>
-         <pointsize>36</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>系统概述</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="listButton">
-       <property name="font">
-        <font>
-         <family>楷体</family>
-         <pointsize>36</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>设备清单</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="controlButton">
-       <property name="font">
-        <font>
-         <family>楷体</family>
-         <pointsize>36</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>远程控制</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="videoButton">
-       <property name="font">
-        <font>
-         <family>楷体</family>
-         <pointsize>36</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>视频监控</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="yuzhishezhi">
-       <property name="font">
-        <font>
-         <family>楷体</family>
-         <pointsize>36</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>阈值设置</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="layoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>1930</x>
-      <y>360</y>
-      <width>251</width>
-      <height>181</height>
-     </rect>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
     </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QPushButton" name="stoprealtimeplot">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>关闭实时数据</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="stophistoryplot">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>关闭历史数据</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="stoppredict">
-       <property name="font">
-        <font>
-         <family>AcadEref</family>
-         <pointsize>24</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>关闭实时预测</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
+    <property name="frameShape">
+     <enum>QFrame::StyledPanel</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <widget class="QStackedWidget" name="stackedWidget">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>80</y>
+       <width>1341</width>
+       <height>871</height>
+      </rect>
+     </property>
+     <widget class="QWidget" name="page"/>
+     <widget class="QWidget" name="page_2"/>
+    </widget>
+    <widget class="QWidget" name="horizontalLayoutWidget">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>10</y>
+       <width>1319</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="homeButton">
+        <property name="font">
+         <font>
+          <family>楷体</family>
+          <pointsize>36</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>系统概述</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="listButton">
+        <property name="font">
+         <font>
+          <family>楷体</family>
+          <pointsize>36</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>设备清单</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="controlButton">
+        <property name="font">
+         <font>
+          <family>楷体</family>
+          <pointsize>36</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>远程控制</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="videoButton">
+        <property name="font">
+         <font>
+          <family>楷体</family>
+          <pointsize>36</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>视频监控</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="yuzhishezhi">
+        <property name="font">
+         <font>
+          <family>楷体</family>
+          <pointsize>36</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>阈值设置</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
    </widget>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources/>
  <connections/>

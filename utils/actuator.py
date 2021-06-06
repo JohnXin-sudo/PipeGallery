@@ -1,6 +1,6 @@
 import requests as rq
 import json
-from register import userRegister
+from . register import userRegister
 
 
 def actuator(actuatorName,action,regData, ip,all=False):

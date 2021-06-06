@@ -1,8 +1,8 @@
 import sys,os,threading
 from clientwindow import MyMainForm
-from database import OperationMysql
+from utils.database import OperationMysql
 from PyQt5.QtWidgets import QApplication, QMainWindow
-from register import userRegister
+from utils.register import userRegister
 
 def mainThread(op_mysql,serverIP):
     # 固定的，PyQt5程序都需要QApplication对象。sys.argv是命令行参数列表，确保程序可以双击运行
