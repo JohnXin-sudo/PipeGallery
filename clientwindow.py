@@ -63,7 +63,7 @@ class WebChannelDeal(QObject):
 
 # 视频监控部件
 class WebEngineView(QWebEngineView):
-
+    # todo pyqt python与js的互相调用还是很有意思的，想一个好的互动方式
     def __init__(self):
         super(WebEngineView, self).__init__()
 
@@ -107,7 +107,7 @@ class PlotForm(QtWidgets.QWidget, PlotWidget):
         super(PlotForm, self).__init__()
         self.setupUi(self)
         self.op_mysql = op_mysql
-        self.setUp()
+        self.setUp()  # todo 我真是服了QT的布局功能，或许是我不会用吧
 
     def setUp(self):
         self.plotCurve = MatplotlibWidget(parent=self, op_mysql=self.op_mysql)
@@ -217,7 +217,7 @@ class PlotForm(QtWidgets.QWidget, PlotWidget):
         print("停止历史数据")
 
 
-# control Form 部件类 通过qtdesigner设计
+# control Form 部件类 通过qtdesigner设计 todo 建立了简易界面与核心功能实现还需要美化界面
 class ControlForm(QtWidgets.QWidget, Ui_Form):
     def __init__(self, regData, serverIP):
         super(ControlForm, self).__init__()
@@ -383,7 +383,7 @@ class ControlForm(QtWidgets.QWidget, Ui_Form):
             print("Error: unable to start thread")
 
 
-# 程序托盘类
+# 程序托盘类 todo 还需要实现这个功能
 class TrayIcon(QtWidgets.QSystemTrayIcon):
     def __init__(self, MainWindow, parent=None):
         super(TrayIcon, self).__init__(parent)
