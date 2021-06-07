@@ -1,14 +1,16 @@
-import sys,os,threading
+import sys
+
+from PyQt5.QtWidgets import QApplication
+
 from clientwindow import MyMainForm
 from utils.database import OperationMysql
-from PyQt5.QtWidgets import QApplication, QMainWindow
-from utils.register import userRegister
 
-def mainThread(op_mysql,serverIP):
+
+def mainThread(op_mysql, serverIP):
     # 固定的，PyQt5程序都需要QApplication对象。sys.argv是命令行参数列表，确保程序可以双击运行
     app = QApplication(sys.argv)
     # 初始化
-    myWin = MyMainForm(op_mysql=op_mysql,ip=serverIP)
+    myWin = MyMainForm(op_mysql=op_mysql, ip=serverIP)
     # 将窗口控件显示在屏幕上
     # myWin.setStyleSheet("#MainWindow{background-color: #f15a22}")
     # myWin.setStyleSheet("#MainWindow{background-color: #BEE7E9}")
