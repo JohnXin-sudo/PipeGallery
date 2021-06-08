@@ -122,7 +122,7 @@ class PlotForm(QtWidgets.QWidget, PlotWidget):
         self.plotCurve.show()
         # 实现界面的图片显示
         # 只能在当前文件夹下cv2才好用
-        img = cv2.imread("image\shmtu-badge.png")  # 读取图像
+        img = cv2.imread("image\A.jpg")  # 读取图像
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # 转换图像通道
         x = img.shape[1]  # 获取图像大小
         y = img.shape[0]
@@ -460,16 +460,16 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
 
         #####################################################################################
 
-        # self.setWindowOpacity(1)
+        self.setWindowOpacity(1)
         # 设置 无边框
         # https://blog.csdn.net/kobeyu652453/article/details/108362771?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-5.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-5.control
 
-        # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
         self.setStyleSheet("#MainWindow{border-image:url(./image/backgroundark.png);}")
-        # self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
-        # self.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
+        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
+        self.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
+        # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
 
-        icon = QtGui.QIcon(".\\image\\icon1.ico")
+        icon = QtGui.QIcon(".\\image\\icon.ico")
         self.setWindowIcon(icon)
         self.setWindowTitle("综合管廊客户端")
         #####################################################################################
@@ -497,15 +497,15 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
 
         # 实现头部导航栏的按钮样式
         self.homeButton.setStyleSheet(
-            'QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         self.listButton.setStyleSheet(
-            'QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         self.controlButton.setStyleSheet(
-            'QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         self.videoButton.setStyleSheet(
-            'QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         self.yuzhishezhi.setStyleSheet(
-            'QPushButton{background: transparent;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:#0c3d6b;}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         #####################################################################################
 
         #####################################################################################
