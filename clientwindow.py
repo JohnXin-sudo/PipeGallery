@@ -26,6 +26,7 @@ from client.PlotWidget import PlotWidget
 from client.main import Ui_MainWindow
 from utils.actuator import actuator
 from utils.database import OperationMysql
+from utils.register import userRegister
 
 # 导入designer工具生成的login模块
 # from client.mainWindow  import Ui_MainWindow
@@ -63,12 +64,14 @@ class WebChannelDeal(QObject):
 
 # 视频监控部件
 class WebEngineView(QWebEngineView):
-    # todo pyqt python与js的互相调用还是很有意思的，想一个好的互动方式
+    # TODO pyqt python与js的互相调用还是很有意思的，想一个好的互动方式
     def __init__(self):
         super(WebEngineView, self).__init__()
 
         # self.load(QUrl('file:///./html/index.html'))
         self.load(QUrl('file:///./html/video.html'))
+        # self.load(QUrl('https://www.iotclient.com/platform/index.php'))
+
 
         self.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
         self.settings().setAttribute(QWebEngineSettings.JavascriptEnabled, True)
@@ -107,7 +110,8 @@ class PlotForm(QtWidgets.QWidget, PlotWidget):
         super(PlotForm, self).__init__()
         self.setupUi(self)
         self.op_mysql = op_mysql
-        self.setUp()  # todo 我真是服了QT的布局功能，或许是我不会用吧
+        self.setUp()  # TODO 我真是服了QT的布局功能，或许是我不会用吧
+        
 
     def setUp(self):
         self.plotCurve = MatplotlibWidget(parent=self, op_mysql=self.op_mysql)
@@ -217,7 +221,8 @@ class PlotForm(QtWidgets.QWidget, PlotWidget):
         print("停止历史数据")
 
 
-# control Form 部件类 通过qtdesigner设计 todo 建立了简易界面与核心功能实现还需要美化界面
+# control Form 部件类 通过qtdesigner设计 
+# TODO 建立了简易界面与核心功能实现还需要美化界面
 class ControlForm(QtWidgets.QWidget, Ui_Form):
     def __init__(self, regData, serverIP):
         super(ControlForm, self).__init__()
@@ -373,7 +378,7 @@ class ControlForm(QtWidgets.QWidget, Ui_Form):
             print("Error: unable to start thread")
 
     def greenButtonClicked(self):
-        self.plotCurve.plotPredicated()
+
         try:
             t = threading.Thread(target=self.threadsFunction, args=("水泵",))
             t.setDaemon(True)
@@ -383,7 +388,8 @@ class ControlForm(QtWidgets.QWidget, Ui_Form):
             print("Error: unable to start thread")
 
 
-# 程序托盘类 todo 还需要实现这个功能
+# 程序托盘类 
+# TODO 还需要实现这个功能
 class TrayIcon(QtWidgets.QSystemTrayIcon):
     def __init__(self, MainWindow, parent=None):
         super(TrayIcon, self).__init__(parent)
@@ -482,7 +488,12 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         # 控制面板 通过widegt实现
         self.controlWidget = ControlForm(regData=self.regData, serverIP=self.serverIP)
         # 设备清单 通过widegt实现 现在尚未实现
-        self.listWidget = QtWidgets.QWidget(self.stackedWidget)
+        self.listWidget = QWebEngineView()
+        self.listWidget.load(QUrl("file:///D:/桌面/PipeGallery/html/list/list.html"))
+        # 阈值设置
+        self.threshold = QWebEngineView()
+        self.threshold.load(QUrl("file:///D:/桌面/PipeGallery/html/yuzhishezhi/threshold.html"))
+
 
         # 实现头部导航栏的按钮样式
         self.homeButton.setStyleSheet(
@@ -506,6 +517,7 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.stackedWidget.addWidget(self.listWidget)  # 设备清单
         self.stackedWidget.addWidget(self.controlWidget)  # 远程控制
         self.stackedWidget.addWidget(self.web)  # 视频监控
+        self.stackedWidget.addWidget(self.threshold)  # 视频监控
 
         self.stackedWidget.setVisible(True)
         #####################################################################################
@@ -533,23 +545,30 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             self.web.show()
             pass
             self.stackedWidget.setGeometry(self.rectWeb)
+        if btn.text() == "阈值设置":
+            self.stackedWidget.setGeometry(self.rectWeb)
+            self.yuzhishezhi.show()
+            pass
+
 
         self.stackedWidget.setCurrentIndex(self.tab.index(btn.text()))
 
     def buttonClicked(self):
 
         self.homeButton.clicked.connect(lambda: self.stackedWidgetThread(self.homeButton))
-        # self.listButton.clicked.connect(lambda: self.stackedWidgetThread(self.listButton))
-        self.listButton.clicked.connect(lambda: self.web.call_Js())
+        self.listButton.clicked.connect(lambda: self.stackedWidgetThread(self.listButton))
+        # self.listButton.clicked.connect(lambda: self.web.call_Js())
 
         self.controlButton.clicked.connect(lambda: self.stackedWidgetThread(self.controlButton))
         self.videoButton.clicked.connect(lambda: self.stackedWidgetThread(self.videoButton))
+        self.yuzhishezhi.clicked.connect(lambda: self.stackedWidgetThread(self.yuzhishezhi))
+
 
 
 if __name__ == "__main__":
 
-    # serverIP = "192.168.3.20"
-    serverIP = "localhost"
+    serverIP = "192.168.3.20"
+    # serverIP = "localhost"
     user = "root"
     # password = "123456" # 服务器数据库密码
     password = "123456"  # 本地电脑数据库密码
@@ -561,10 +580,18 @@ if __name__ == "__main__":
     except Exception as e:
         print("数据库连接失败")
 
+    #  用户注册
+    regData = None
+    try :
+        regData = userRegister(ip=serverIP)
+        print(regData)
+    except Exception:
+        print("用户信息获取失败")
+
     # 固定的，PyQt5程序都需要QApplication对象。sys.argv是命令行参数列表，确保程序可以双击运行
     app = QApplication(sys.argv)
     # 初始化
-    myWin = MyMainForm(op_mysql=op_mysql, ip=serverIP)
+    myWin = MyMainForm(op_mysql=op_mysql, ip=serverIP, regData=regData)
     # 将窗口控件显示在屏幕上
     # myWin.setStyleSheet("#MainWindow{border-image:url(./image/backgroundark.png);}")
     myWin.show()
