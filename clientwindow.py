@@ -72,6 +72,43 @@ class WebEngineView(QWebEngineView):
         self.load(QUrl('file:///./html/video.html'))
         # self.load(QUrl('https://www.iotclient.com/platform/index.php'))
 
+        self.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
+        self.settings().setAttribute(QWebEngineSettings.JavascriptEnabled, True)
+        self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
+        self.page().settings().setAttribute(QWebEngineSettings.ShowScrollBars, False)  # 隐藏滚动条
+        # 实现js调用python代码
+        self.channel = QWebChannel()
+        self.webChannelDeal = WebChannelDeal()
+        self.channel.registerObject('pyjs', self.webChannelDeal)
+        self.page().setWebChannel(self.channel)
+
+    # 实现页面内部网页跳转
+    def createWindow(self, QWebEnginePage_WebWindowType):
+        page = WebEngineView(self)
+        page.urlChanged.connect(self.on_url_changed)
+        return page
+
+    def on_url_changed(self, url):
+        self.setUrl(url)
+
+    # python调用js的回调函数
+    def js_callback(self, result):
+        print(result)
+
+    # python调用js的函数
+    def call_Js(self):
+        # 向js中传值
+        value = 'python send'
+        self.page().runJavaScript('Transport("' + value + '");',
+                                  self.js_callback)  # 第一个参数是调用html中js。第二个参数是js的返回值  。注意：第一个参数有传值的话，一定有双引号
+
+
+# 首页绘图功能由网页端实现
+class PlotWebView(QWebEngineView):
+    def __init__(self):
+        super(WebEngineView, self).__init__()
+
+        self.load(QUrl('file:///./html/index.html'))
 
         self.settings().setAttribute(QWebEngineSettings.PluginsEnabled, True)
         self.settings().setAttribute(QWebEngineSettings.JavascriptEnabled, True)
@@ -111,7 +148,6 @@ class PlotForm(QtWidgets.QWidget, PlotWidget):
         self.setupUi(self)
         self.op_mysql = op_mysql
         self.setUp()  # TODO 我真是服了QT的布局功能，或许是我不会用吧
-        
 
     def setUp(self):
         self.plotCurve = MatplotlibWidget(parent=self, op_mysql=self.op_mysql)
@@ -465,8 +501,8 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         # https://blog.csdn.net/kobeyu652453/article/details/108362771?utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-5.control&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7Edefault-5.control
 
         self.setStyleSheet("#MainWindow{border-image:url(./image/backgroundark.png);}")
-        self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
-        self.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
+        # self.setWindowFlags(QtCore.Qt.WindowMinimizeButtonHint)
+        # self.setWindowFlags(QtCore.Qt.MSWindowsFixedSizeDialogHint)
         # self.setWindowFlag(QtCore.Qt.FramelessWindowHint)
 
         icon = QtGui.QIcon(".\\image\\icon.ico")
@@ -485,27 +521,31 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.plotWidget = PlotForm(op_mysql=self.op_mysql)
         # 视频监控通过web实现
         self.web = WebEngineView()
-        # 控制面板 通过widegt实现
+        # 控制面板 通过widget实现
         self.controlWidget = ControlForm(regData=self.regData, serverIP=self.serverIP)
-        # 设备清单 通过widegt实现 现在尚未实现
+        # 设备清单 通过widget实现 现在尚未实现
         self.listWidget = QWebEngineView()
         self.listWidget.load(QUrl("file:///D:/桌面/PipeGallery/html/list/list.html"))
         # 阈值设置
         self.threshold = QWebEngineView()
         self.threshold.load(QUrl("file:///D:/桌面/PipeGallery/html/yuzhishezhi/threshold.html"))
 
-
         # 实现头部导航栏的按钮样式
         self.homeButton.setStyleSheet(
-            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white'
+            ';}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         self.listButton.setStyleSheet(
-            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white'
+            ';}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         self.controlButton.setStyleSheet(
-            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white'
+            ';}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         self.videoButton.setStyleSheet(
-            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white'
+            ';}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         self.yuzhishezhi.setStyleSheet(
-            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white;}QPushButton:hover{background:rgb(44 , 137 , 255);}')
+            'QPushButton{background: transparent;border-radius:8px;border:0px;font-family:\'楷体\';color:white'
+            ';}QPushButton:hover{background:rgb(44 , 137 , 255);}')
         #####################################################################################
 
         #####################################################################################
@@ -550,7 +590,6 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
             self.yuzhishezhi.show()
             pass
 
-
         self.stackedWidget.setCurrentIndex(self.tab.index(btn.text()))
 
     def buttonClicked(self):
@@ -564,11 +603,10 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.yuzhishezhi.clicked.connect(lambda: self.stackedWidgetThread(self.yuzhishezhi))
 
 
-
 if __name__ == "__main__":
 
-    serverIP = "192.168.3.20"
-    # serverIP = "localhost"
+    # serverIP = "192.168.3.20"
+    serverIP = "localhost"
     user = "root"
     # password = "123456" # 服务器数据库密码
     password = "123456"  # 本地电脑数据库密码
@@ -582,18 +620,17 @@ if __name__ == "__main__":
 
     #  用户注册
     regData = None
-    try :
-        regData = userRegister(ip=serverIP)
-        print(regData)
-    except Exception:
-        print("用户信息获取失败")
+    # try:
+    #     regData = userRegister(ip=serverIP)
+    #     print(regData)
+    # except Exception:
+    #     print("用户信息获取失败")
 
     # 固定的，PyQt5程序都需要QApplication对象。sys.argv是命令行参数列表，确保程序可以双击运行
     app = QApplication(sys.argv)
     # 初始化
     myWin = MyMainForm(op_mysql=op_mysql, ip=serverIP, regData=regData)
     # 将窗口控件显示在屏幕上
-    # myWin.setStyleSheet("#MainWindow{border-image:url(./image/backgroundark.png);}")
     myWin.show()
     # 程序运行，sys.exit方法确保程序完整退出。
     sys.exit(app.exec_())

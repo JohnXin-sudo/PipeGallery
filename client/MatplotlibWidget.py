@@ -62,12 +62,12 @@ class MyMplCanvas(FigureCanvas):
         )
         FigureCanvas.updateGeometry(self)
 
-        self.i = 1  # 历史数据计数用
+        self.i = 361  # 历史数据计数用
         self.historyFlag = 0
         self.realtimeFlag = 0
         self.PredicatedFlag = 0
-        self.historySpeed = 0.1
-        self.predN = 50
+        self.historySpeed = 0.5
+        self.predN = 40
 
 #######################################################################
     def xtickRotion(self, xticks, rotation=25):
