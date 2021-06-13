@@ -47,20 +47,20 @@ header .showTime {
   display: flex;
 }
 .mainbox .column {
-  flex: 3;
+  flex: 2;
 }
 .mainbox .column:nth-child(2) {
-  flex: 5;
+  flex: 6;
   margin: 0 0.125rem 0.1875rem;
   overflow: hidden;
 }
 .panel {
   position: relative;
-  height: 3.875rem;
+  height: 3.2rem;
   border: 1px solid rgba(25, 186, 139, 0.17);
   background: rgba(255, 255, 255, 0.04) url(../images/line\(1\).png);
   padding: 0 0.1875rem 0.5rem;
-  margin-bottom: 0.1875rem;
+  margin-bottom: 0.2875rem;
 }
 .panel::before {
   position: absolute;
@@ -124,6 +124,20 @@ header .showTime {
 .panel .chart {
   height: 3rem;
 }
+.column .icons {
+
+  position: relative;
+  height: 180px;
+  padding-left :1.25rem;
+
+  display:table-cell;
+  vertical-align:middle;
+}
+.column .icons img {
+
+  height: 180px;
+  width: 180px;
+}
 .no {
   background: rgba(101, 132, 226, 0.1);
   padding: 0.1875rem;
@@ -131,27 +145,47 @@ header .showTime {
 .no .no-hd {
   position: relative;
   border: 1px solid rgba(25, 186, 139, 0.17);
+  align-self: center;
 }
-.no .no-hd::before {
-  content: "";
-  position: absolute;
-  width: 30px;
-  height: 10px;
-  border-top: 2px solid #02a6b5;
-  border-left: 2px solid #02a6b5;
-  top: 0;
-  left: 0;
+.no .no-hd .btn {
+  width: 90px;
+  height: 45px;
+  align-self: center;
 }
-.no .no-hd::after {
-  content: "";
-  position: absolute;
-  width: 30px;
-  height: 10px;
-  border-bottom: 2px solid #02a6b5;
-  border-right: 2px solid #02a6b5;
-  right: 0;
-  bottom: 0;
+.no .no-hd .ipt {
+  width: 180px;
+  height: 45px;
+  align-self: center;
 }
+.no .no-hd input,button{
+  background: #02083C;
+  color:#fff;
+  border: none;
+  font-size:0.35rem;
+  font-family:'楷体';
+  opacity: 0.8;
+  border-radius:20%;  
+  
+}
+.no .no-hd button:hover{
+  background: #0A32E9;
+  color:#fff;
+  border: 2px;
+  
+}
+.no .no-hd .pass {
+  width: 18px;
+  height: 0px;
+
+}
+.no .no-hd .btnc {
+  width: 250px;
+  height: 45px;
+  align-self: center;
+  font-family:'楷体';
+  font-size:0.7rem;
+}
+
 .no .no-hd ul {
   display: flex;
 }
@@ -166,6 +200,10 @@ header .showTime {
   padding: 0.05rem 0;
   font-family: electronicFont;
   font-weight: bold;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 .no .no-hd ul li:first-child::after {
   content: "";
@@ -189,8 +227,9 @@ header .showTime {
   padding-top: 0.125rem;
 }
 .map {
-  position: relative;
+  position: absolute;
   height: 10.125rem;
+  z-index:0
 }
 .map .chart {
   position: absolute;
@@ -198,7 +237,8 @@ header .showTime {
   left: 0;
   z-index: 5;
   height: 10.125rem;
-  width: 100%;
+  width: 26rem;
+  opacity: 0.1;
 }
 .map .map1,
 .map .map2,

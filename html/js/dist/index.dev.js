@@ -1,6 +1,9 @@
+"use strict";
+
 var id = 370;
 var windowsize = 50;
 var plotType = "history"; //history,realtime,predict
+
 var plotSpeed = 1.; //秒
 
 var dataTransport = {
@@ -8,31 +11,28 @@ var dataTransport = {
   "windowsize": windowsize,
   "plotType": plotType,
   "plotSpeed": plotSpeed
-}
+}; // 基于准备好的dom，初始化echarts实例
 
-// 基于准备好的dom，初始化echarts实例
 var linePh4 = echarts.init(document.querySelector(".linePh4 .chart"));
 var lineO2 = echarts.init(document.querySelector(".lineO2 .chart"));
 var lineHumility = echarts.init(document.querySelector(".lineHumility .chart"));
 var lineTemperature = echarts.init(document.querySelector(".lineTemperature .chart"));
-
 window.addEventListener("resize", function () {
   linePh4.resize();
   lineO2.resize();
   lineHumility.resize();
   lineTemperature.resize();
-});
+}); // 打印到python窗口
 
-// 打印到python窗口
 function print(message) {
-  window.pyjs.jsPrint(message)
+  window.pyjs.jsPrint(message);
 }
 
 function jsCallback(result) {
   // alert(result)
   // data有四个数据x、 ph4、temperature、humility、o2
-  jsonData = JSON.parse(result);
-  // alert(data.temperature)
+  jsonData = JSON.parse(result); // alert(data.temperature)
+
   var linePh4Option = {
     color: ["#00f2f1", "#ed3f35"],
     tooltip: {
@@ -45,9 +45,9 @@ function jsCallback(result) {
       // 修饰图例文字的颜色
       textStyle: {
         color: "#4c9bfd"
-      }
-      // 如果series 里面设置了name，此时图例组件的data可以省略
+      } // 如果series 里面设置了name，此时图例组件的data可以省略
       // data: ["邮件营销", "联盟广告"]
+
     },
     grid: {
       top: "20%",
@@ -58,7 +58,6 @@ function jsCallback(result) {
       borderColor: "#012f4a",
       containLabel: true
     },
-
     xAxis: {
       type: "category",
       boundaryGap: false,
@@ -101,7 +100,6 @@ function jsCallback(result) {
       smooth: true,
       data: jsonData.ph4
     }]
-
   };
   var lineO2Option = {
     color: ["#00f2f1", "#ed3f35"],
@@ -115,9 +113,9 @@ function jsCallback(result) {
       // 修饰图例文字的颜色
       textStyle: {
         color: "#4c9bfd"
-      }
-      // 如果series 里面设置了name，此时图例组件的data可以省略
+      } // 如果series 里面设置了name，此时图例组件的data可以省略
       // data: ["邮件营销", "联盟广告"]
+
     },
     grid: {
       top: "20%",
@@ -128,7 +126,6 @@ function jsCallback(result) {
       borderColor: "#012f4a",
       containLabel: true
     },
-
     xAxis: {
       type: "category",
       boundaryGap: false,
@@ -171,7 +168,6 @@ function jsCallback(result) {
       smooth: true,
       data: jsonData.o2
     }]
-
   };
   var lineHumilityOption = {
     color: ["#00f2f1", "#ed3f35"],
@@ -185,9 +181,9 @@ function jsCallback(result) {
       // 修饰图例文字的颜色
       textStyle: {
         color: "#4c9bfd"
-      }
-      // 如果series 里面设置了name，此时图例组件的data可以省略
+      } // 如果series 里面设置了name，此时图例组件的data可以省略
       // data: ["邮件营销", "联盟广告"]
+
     },
     grid: {
       top: "20%",
@@ -198,7 +194,6 @@ function jsCallback(result) {
       borderColor: "#012f4a",
       containLabel: true
     },
-
     xAxis: {
       type: "category",
       boundaryGap: false,
@@ -241,7 +236,6 @@ function jsCallback(result) {
       smooth: true,
       data: jsonData.humility
     }]
-
   };
   var lineTemperatureOption = {
     color: ["#00f2f1", "#ed3f35"],
@@ -255,9 +249,9 @@ function jsCallback(result) {
       // 修饰图例文字的颜色
       textStyle: {
         color: "#4c9bfd"
-      }
-      // 如果series 里面设置了name，此时图例组件的data可以省略
+      } // 如果series 里面设置了name，此时图例组件的data可以省略
       // data: ["邮件营销", "联盟广告"]
+
     },
     grid: {
       top: "20%",
@@ -268,7 +262,6 @@ function jsCallback(result) {
       borderColor: "#012f4a",
       containLabel: true
     },
-
     xAxis: {
       type: "category",
       boundaryGap: false,
@@ -311,57 +304,52 @@ function jsCallback(result) {
       smooth: true,
       data: jsonData.temperature
     }]
-
   };
-
   linePh4.setOption(linePh4Option);
   lineO2.setOption(lineO2Option);
   lineHumility.setOption(lineHumilityOption);
   lineTemperature.setOption(lineTemperatureOption);
-
-
 }
 
 function getData() {
   data = JSON.stringify(dataTransport);
-  print(data)
+  print(data);
   window.pyjs.getData(data, jsCallback); //调用pyqt中的函数进行，将图片传入，异步传回success
+
   dataTransport.id += 1;
   dataTransport.windowsize = windowsize;
-  dataTransport.plotSpeed = plotSpeed //TODO 这里有bug
+  dataTransport.plotSpeed = plotSpeed; //TODO 这里有bug
 }
 
 function historyPlot() {
   dataTransport.plotType = "history";
-  stopPlot()
+  stopPlot();
   setInterval(getData, dataTransport.plotSpeed * 1000);
 }
 
 function realtimePlot() {
   dataTransport.plotType = "realtime";
-  stopPlot()
+  stopPlot();
   setInterval(getData, dataTransport.plotSpeed * 1000);
-
 }
 
 function predictPlot() {
   dataTransport.plotType = "predict";
-  stopPlot()
+  stopPlot();
   setInterval(getData, dataTransport.plotSpeed * 1000);
 }
 
 function stopPlot() {
   for (var i = 1; i < 100; i++) {
-    clearInterval(i);
+    clearInterval(i); // print(i)
   }
-}
+} // python调用js
 
-// python调用js
+
 function pythonCallJs(data) {
   // alert(result)
   // data有四个数据x、 ph4、temperature、humility、o2
-  alert(data)
-  // jsonData = JSON.parse(data);
+  alert(data); // jsonData = JSON.parse(data);
   // alert(data.temperature)
   // var linePh4Option = {
   //   color: ["#00f2f1", "#ed3f35"],
@@ -388,7 +376,6 @@ function pythonCallJs(data) {
   //     borderColor: "#012f4a",
   //     containLabel: true
   //   },
-
   //   xAxis: {
   //     type: "category",
   //     boundaryGap: false,
@@ -431,7 +418,6 @@ function pythonCallJs(data) {
   //     smooth: true,
   //     data: jsonData.ph4
   //   }]
-
   // };
   // var lineO2Option = {
   //   color: ["#00f2f1", "#ed3f35"],
@@ -458,7 +444,6 @@ function pythonCallJs(data) {
   //     borderColor: "#012f4a",
   //     containLabel: true
   //   },
-
   //   xAxis: {
   //     type: "category",
   //     boundaryGap: false,
@@ -501,7 +486,6 @@ function pythonCallJs(data) {
   //     smooth: true,
   //     data: jsonData.O2
   //   }]
-
   // };
   // var lineHumilityOption = {
   //   color: ["#00f2f1", "#ed3f35"],
@@ -528,7 +512,6 @@ function pythonCallJs(data) {
   //     borderColor: "#012f4a",
   //     containLabel: true
   //   },
-
   //   xAxis: {
   //     type: "category",
   //     boundaryGap: false,
@@ -571,7 +554,6 @@ function pythonCallJs(data) {
   //     smooth: true,
   //     data: jsonData.humility
   //   }]
-
   // };
   // var lineTemperatureOption = {
   //   color: ["#00f2f1", "#ed3f35"],
@@ -598,7 +580,6 @@ function pythonCallJs(data) {
   //     borderColor: "#012f4a",
   //     containLabel: true
   //   },
-
   //   xAxis: {
   //     type: "category",
   //     boundaryGap: false,
@@ -641,67 +622,25 @@ function pythonCallJs(data) {
   //     smooth: true,
   //     data: jsonData.temperature
   //   }]
-
   // };
-
   // linePh4.setOption(linePh4Option);
   // lineO2.setOption(lineO2Option);
   // lineHumility.setOption(lineHumilityOption);
   // lineTemperature.setOption(lineTemperatureOption);
 
-  return "success"
+  return "success";
+} // button clicked
+
+
+function plotId() {
+  document.getElementById("ID").innerText;
+  dataTransport.id = document.getElementById("ID").innerText = "";
 }
 
-
-// button clicked
-
-function isEmpty(obj) {
-  if (typeof obj == "undefined" || obj == null || obj == "") {
-    return true;
-  } else {
-    return false;
-  }
+function plotNum() {
+  dataTransport.windowsize = document.getElementById("num").innerText;
 }
-  function plotId() {
-    str = document.getElementById("ID").value;
-    // print(str)
-    if (isEmpty(str)) {
-      print("输入数据为空"+str)
-      return false;
-    }
-    if (id = parseInt(str)) {
-    }else{
-      print("输入数据错误"+str)
-    }
-    document.getElementById("ID").outerHTML;
-  }
 
-  function plotNum() {
-    str = document.getElementById("num").value;
-    
-    if (isEmpty(str)) {
-      print("输入数据为空"+str)
-      return false;
-    }
-    if (windowsize = parseInt(str)) { 
-    }else{
-            print("输入数据错误"+str)
-    }
-    document.getElementById("num").outerHTML;
-  }
-
-  function plotSp() {
-    str = document.getElementById("speed").value;
-    print(str)
-    if (isEmpty(str)) {
-      print("输入数据为空"+str)
-      return false;
-    }
-    if (plotSpeed = parseInt(str)) {
-      
-    }else{
-      print("输入数据错误"+str)
-      return false
-    }
-    document.getElementById("speed").outerHTML;
-  }
+function plotSp() {
+  dataTransport.plotSpeed = document.getElementById("speed").innerText;
+}

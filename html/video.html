@@ -14,54 +14,11 @@
         html,
         body {
             height: 100%;
-<!--            overflow: hidden;-->
+
         }
 
 
     </style>
-
-    <!--用来映射-->
-    <script type="text/javascript" src="../js/qwebchannel.js"></script>
-    <!--在线调用截图js-->
-    <script type="text/javascript" src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-
-    <!-- js调用python -->
-    <script>
-        // 回调函数 js调用python执行完后，运行此函数，参数为python返回值
-        function callback(result) {
-            alert(result)
-        }
-        window.onload = function () {
-            new QWebChannel(qt.webChannelTransport, function (channel) { //必须，将python程序映射到js
-                window.pyjs = channel.objects.pyjs;
-
-            });
-        }
-
-        function do_print() {
-            if (pyjs !== null) {
-                //将网页保存为图片数据流
-                html2canvas(document.querySelector("#pagecontent")).then(canvas => {
-                    var data_url = canvas.toDataURL();
-                    pyjs.print_img(data_url, callback); //调用pyqt中的函数进行，将图片传入，异步传回success
-                });
-
-
-            }
-        }
-
-
-    </script>
-
-    <!-- python调用js -->
-    <script>
-        function Transport(value) { //Pyqt中调用
-            alert(value)
-            return "js return"; //会返回到PyQT中 
-        }
-
-
-    </script>
 
     <title>地下综合管廊预警系统</title>
 </head>
@@ -69,7 +26,7 @@
 <body background="../image/backgroundark.png">
 <div style="height:8%;background-color:#155B83;float:left;width:100%">
     <div id=topbar style="width:100%;
-                                float:left;height:100%;   
+                                float:left;height:100%;
                                 background: url('../image/body/topbg.png');
                                 background-size: 100% 100%;
                                 text-align: center;

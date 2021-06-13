@@ -3,11 +3,13 @@
 import base64
 # 是任务栏图标发生改变
 import ctypes
+import json, time
 import sys
 import threading
+import numpy as np
 
 import PyQt5
-import cv2
+# import cv2
 from PyQt5 import QtCore
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QObject, pyqtSlot, QUrl
@@ -36,8 +38,11 @@ ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("myappid")
 
 # js调用python的处理类，实现各种js调用的函数
 class WebChannelDeal(QObject):
-    def __init__(self):
+    def __init__(self, op_mysql):
         super().__init__()
+        self.op_mysql = op_mysql
+        self.historyFlag = 0
+        self.predN = 100
 
     # pyqtSlot槽函数用以处理同名的监听事件
     @pyqtSlot(str, result=str)
@@ -61,6 +66,59 @@ class WebChannelDeal(QObject):
         document.print(printer)
         return 'sucess'  # 处理成功传回success，返回信息被js回调函数处理
 
+    @pyqtSlot(str, result=str)
+    def jsPrint(self, message):
+        print(message)
+
+    @pyqtSlot(str, result=str)
+    def getData(self, js):
+        # print("js arguments: " + js)
+        jsData = json.loads(js)
+        id = int(jsData['id'])
+        windowsize = int(jsData['windowsize'])
+        # plotSpeed = int(jsData['plotSpeed'])
+        plotType = jsData['plotType']
+        step = 1
+        if 200 < windowsize <= 400:
+            step = 2
+        elif 400 < windowsize <= 800:
+            step = 4
+        elif 800 < windowsize <= 1600:
+            step = 8
+        elif 1600 < windowsize <= 3200 :
+            step = 16
+        elif 3200 < windowsize <= 6400:
+            step = 32
+        elif 6400 < windowsize <= 12800:
+            step = 64
+        elif 12800 < windowsize <= 25600:
+            step = 128
+        elif 25600 < windowsize <= 51200:
+            step = 256
+        elif 51200 < windowsize <= 102400:
+            step = 512
+        elif 102400 < windowsize <= 204800:
+            step = 1024
+        _, dataWindow, index = self.op_mysql.getData(
+            id=id, window_size=windowsize,step=step)
+        print (dataWindow.shape)
+
+
+
+        ph4 = dataWindow[:, 0].tolist()
+        temperature = dataWindow[:, 1].tolist()
+        humility = dataWindow[:, 2].tolist()
+        o2 = dataWindow[:, 3].tolist()
+        t = []
+        for x in index:
+            t.append(x.strftime('%H:%M:%S'))
+
+        data = {'x': t, 'ph4': ph4, 'temperature': temperature, "humility": humility, 'o2': o2}
+        return json.dumps(data)
+
+    def plotThread(self):
+        pass
+
 
 # 视频监控部件
 class WebEngineView(QWebEngineView):
@@ -76,11 +134,6 @@ class WebEngineView(QWebEngineView):
         self.settings().setAttribute(QWebEngineSettings.JavascriptEnabled, True)
         self.settings().setAttribute(QWebEngineSettings.FullScreenSupportEnabled, True)
         self.page().settings().setAttribute(QWebEngineSettings.ShowScrollBars, False)  # 隐藏滚动条
-        # 实现js调用python代码
-        self.channel = QWebChannel()
-        self.webChannelDeal = WebChannelDeal()
-        self.channel.registerObject('pyjs', self.webChannelDeal)
-        self.page().setWebChannel(self.channel)
 
     # 实现页面内部网页跳转
     def createWindow(self, QWebEnginePage_WebWindowType):
@@ -91,22 +144,11 @@ class WebEngineView(QWebEngineView):
     def on_url_changed(self, url):
         self.setUrl(url)
 
-    # python调用js的回调函数
-    def js_callback(self, result):
-        print(result)
-
-    # python调用js的函数
-    def call_Js(self):
-        # 向js中传值
-        value = 'python send'
-        self.page().runJavaScript('Transport("' + value + '");',
-                                  self.js_callback)  # 第一个参数是调用html中js。第二个参数是js的返回值  。注意：第一个参数有传值的话，一定有双引号
-
 
 # 首页绘图功能由网页端实现
 class PlotWebView(QWebEngineView):
-    def __init__(self):
-        super(WebEngineView, self).__init__()
+    def __init__(self, op_mysql):
+        super(PlotWebView, self).__init__()
 
         self.load(QUrl('file:///./html/index.html'))
 
@@ -116,9 +158,16 @@ class PlotWebView(QWebEngineView):
         self.page().settings().setAttribute(QWebEngineSettings.ShowScrollBars, False)  # 隐藏滚动条
         # 实现js调用python代码
         self.channel = QWebChannel()
-        self.webChannelDeal = WebChannelDeal()
+        self.webChannelDeal = WebChannelDeal(op_mysql=op_mysql)
         self.channel.registerObject('pyjs', self.webChannelDeal)
         self.page().setWebChannel(self.channel)
+
+        self.op_mysql = op_mysql
+        self.i = 370
+        self.historyFlag = 0
+        self.predN = 100
+
+
 
     # 实现页面内部网页跳转
     def createWindow(self, QWebEnginePage_WebWindowType):
@@ -134,11 +183,51 @@ class PlotWebView(QWebEngineView):
         print(result)
 
     # python调用js的函数
-    def call_Js(self):
+    def call_Js(self, value):
         # 向js中传值
-        value = 'python send'
-        self.page().runJavaScript('Transport("' + value + '");',
-                                  self.js_callback)  # 第一个参数是调用html中js。第二个参数是js的返回值  。注意：第一个参数有传值的话，一定有双引号
+        print('pythonCallJs("' + value + '");')
+        # self.page().runJavaScript('pythonCallJs("' + value + '");', self.js_callback)
+        # self.page().runJavaScript("pythonCallJs({});".format(value),
+        #                           self.js_callback)  # 第一个参数是调用html中js。第二个参数是js的返回值  。注意：第一个参数有传值的话，一定有双引号
+
+    def forHsitoryThreadsFunction(self, window_size=50, speed=0.1):
+        while True:
+            window_size = self.predN
+            if self.historyFlag == 0:
+                return
+
+            _, dataWindow, index = self.op_mysql.getData(
+                id=self.i, window_size=window_size)
+
+            ph4 = dataWindow[:, 0].tolist()
+            temperature = dataWindow[:, 1].tolist()
+            humility = dataWindow[:, 2].tolist()
+            o2 = dataWindow[:, 3].tolist()
+            t = []
+            for time in index:
+                t.append(time.strftime('%H:%M:%S'))
+
+            data = {'x': t, 'ph4': ph4, 'temperature': temperature, "humility": humility, 'o2': o2}
+            data = json.dumps(data)
+            self.i += 1
+
+            # self.call_Js(data)
+            print (data)
+
+            time.sleep(self.historySpeed)
+            # print("数据更新！")
+
+    def plotHistory(self, window_size=50, speed=0.1):
+        # 防止线程冲突
+        if self.historyFlag == 1:
+            self.historyFlag = 0
+            time.sleep(1)
+
+        self.historyFlag = 1
+        t = threading.Thread(
+            target=self.forHsitoryThreadsFunction, args=(window_size, speed))
+        t.setDaemon(True)  # 设置线程为守护线程，防止退出主线程时，子线程仍在运行
+        t.start()
 
 
 # 首页绘图部件
@@ -517,8 +606,10 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         # 实现一个堆叠控件用于切换界面
         self.stackedWidget = PyQt5.QtWidgets.QStackedWidget(self.centralwidget)
         self.stackedWidget.setGeometry(self.rectWeb)
-        # 系统首界面 绘制图形
-        self.plotWidget = PlotForm(op_mysql=self.op_mysql)
+        # # 系统首界面 绘制图形
+        # self.plotWidget = PlotForm(op_mysql=self.op_mysql)
+        # 系统首界面，通过web实现 与上一种选一种方式即可
+        self.plotWidget = PlotWebView(op_mysql=self.op_mysql)
         # 视频监控通过web实现
         self.web = WebEngineView()
         # 控制面板 通过widget实现
@@ -562,6 +653,7 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
         self.stackedWidget.setVisible(True)
         #####################################################################################
         self.buttonClicked()
+
 
         #####################################################################################
 

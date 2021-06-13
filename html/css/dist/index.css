@@ -118,8 +118,8 @@ header .showTime {
   color: rgba(255, 255, 255, 0.7);
   padding-top: 0.125rem;
 }
-.no .no-bd ul .btn {
-  flex: 1;
+.no .btn {
+  flex: 2;
   height: 0.5rem;
   line-height: 0.5rem;
   text-align: center;
