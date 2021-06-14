@@ -153,7 +153,14 @@ header .showTime {
   align-self: center;
 }
 .no .no-hd .ipt {
-  width: 180px;
+  text-align:center;
+  width: 170px;
+  height: 45px;
+  align-self: center;
+}
+.no .no-hd .btnc {
+  text-align:center;
+  width: 270px;
   height: 45px;
   align-self: center;
 }
@@ -164,7 +171,7 @@ header .showTime {
   font-size:0.35rem;
   font-family:'楷体';
   opacity: 0.8;
-  border-radius:20%;  
+  border-radius:12px;  
   
 }
 .no .no-hd button:hover{

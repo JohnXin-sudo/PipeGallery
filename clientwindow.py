@@ -72,6 +72,9 @@ class WebChannelDeal(QObject):
 
     @pyqtSlot(str, result=str)
     def getData(self, js):
+        return self.plotThread(js)
+
+    def plotThread(self, js):
         # print("js arguments: " + js)
         jsData = json.loads(js)
         id = int(jsData['id'])
@@ -85,7 +88,7 @@ class WebChannelDeal(QObject):
             step = 4
         elif 800 < windowsize <= 1600:
             step = 8
-        elif 1600 < windowsize <= 3200 :
+        elif 1600 < windowsize <= 3200:
             step = 16
         elif 3200 < windowsize <= 6400:
             step = 32
@@ -100,10 +103,8 @@ class WebChannelDeal(QObject):
         elif 102400 < windowsize <= 204800:
             step = 1024
         _, dataWindow, index = self.op_mysql.getData(
-            id=id, window_size=windowsize,step=step)
-        print (dataWindow.shape)
-
-
+            id=id, window_size=windowsize, step=step)
+        print(dataWindow.shape)
 
         ph4 = dataWindow[:, 0].tolist()
         temperature = dataWindow[:, 1].tolist()
@@ -115,9 +116,6 @@ class WebChannelDeal(QObject):
 
         data = {'x': t, 'ph4': ph4, 'temperature': temperature, "humility": humility, 'o2': o2}
         return json.dumps(data)
-
-    def plotThread(self):
-        pass
 
 
 # 视频监控部件
