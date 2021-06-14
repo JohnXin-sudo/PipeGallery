@@ -1,3 +1,4 @@
+
 var id = 370;
 var windowsize = 50;
 var plotType = "history"; //history,realtime,predict
@@ -22,6 +23,8 @@ window.addEventListener("resize", function () {
   lineHumility.resize();
   lineTemperature.resize();
 });
+
+$
 
 // 打印到python窗口
 function print(message) {
@@ -531,24 +534,84 @@ function getData() {
   dataTransport.windowsize = windowsize;
   dataTransport.plotSpeed = plotSpeed //TODO 这里有bug
 }
-
+// jQuery.support.cors = true;
 function historyPlot() {
-  dataTransport.plotType = "history";
   stopPlot()
-  setInterval(getData, dataTransport.plotSpeed * 1000);
+  plotType = "history";
+  t = setInterval(function(){
+    $.ajax({
+      url: "http://127.0.0.1:8000/data/?id="+id+"&windowsize="+
+                                             windowsize + 
+                                             "&plotType="+plotType+
+                                             "&plotSpeed="+plotSpeed,
+      // data:JSON.stringify(dataTransport),
+      datatype: "json",
+      type: "GET",
+      success: function (result){
+        speed = plotSpeed
+        
+        id+=1,
+        jsCallback(result)
+        // t = setTimeout(time, plotSpeed * 1000); //设定定时器，循环运行
+      },
+      error: function (e) {
+      } 
+    })
+  }
+    , plotSpeed * 1000); //開始运行
+  
 }
 
 function realtimePlot() {
-  dataTransport.plotType = "realtime";
   stopPlot()
-  setInterval(getData, dataTransport.plotSpeed * 1000);
-
+  plotType = "realtime";
+  t = setInterval(function(){
+    $.ajax({
+      url: "http://127.0.0.1:8000/data/?id="+id+"&windowsize="+
+                                             windowsize + 
+                                             "&plotType="+plotType+
+                                             "&plotSpeed="+plotSpeed,
+      // data:JSON.stringify(dataTransport),
+      datatype: "json",
+      type: "GET",
+      success: function (result){
+        speed = plotSpeed
+        
+        id+=1,
+        jsCallback(result)
+        // t = setTimeout(time, plotSpeed * 1000); //设定定时器，循环运行
+      },
+      error: function (e) {
+      } 
+    })
+  }
+    , plotSpeed * 1000); //開始运行
 }
 
 function predictPlot() {
-  dataTransport.plotType = "predict";
   stopPlot()
-  setInterval(getData, dataTransport.plotSpeed * 1000);
+  plotType = "predict";
+  t = setInterval(function(){
+    $.ajax({
+      url: "http://127.0.0.1:8000/data/?id="+id+"&windowsize="+
+                                             windowsize + 
+                                             "&plotType="+plotType+
+                                             "&plotSpeed="+plotSpeed,
+      // data:JSON.stringify(dataTransport),
+      datatype: "json",
+      type: "GET",
+      success: function (result){
+        speed = plotSpeed
+        
+        id+=1,
+        jsCallback(result)
+        // t = setTimeout(time, plotSpeed * 1000); //设定定时器，循环运行
+      },
+      error: function (e) {
+      } 
+    })
+  }
+    , plotSpeed * 1000); //開始运行
 }
 
 function stopPlot() {
@@ -586,7 +649,7 @@ function plotId() {
   if (id = parseInt(str)) {} else {
     print("输入数据错误" + str)
   }
-  document.getElementById("ID").outerHTML;
+  document.getElementById("ID").value="";
 }
 
 function plotNum() {
@@ -599,7 +662,7 @@ function plotNum() {
   if (windowsize = parseInt(str)) {} else {
     print("输入数据错误" + str)
   }
-  document.getElementById("num").outerHTML;
+  document.getElementById("num").value="";
 }
 
 function plotSp() {
@@ -615,5 +678,5 @@ function plotSp() {
     print("输入数据错误" + str)
     return false
   }
-  document.getElementById("speed").outerHTML;
+  document.getElementById("speed").value="";
 }
