@@ -463,7 +463,7 @@ class ControlForm(QtWidgets.QWidget, Ui_Form):
     def baojingButtonClicked(self):
 
         try:
-            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t = threading.Thread(target=self.threadsFunction, args=("报警灯",))
             t.setDaemon(True)
             t.start()
             # t.join() # 主进程卡在这等线程执行完毕
@@ -472,7 +472,7 @@ class ControlForm(QtWidgets.QWidget, Ui_Form):
 
     def fengjiButtonClicked(self):
         try:
-            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t = threading.Thread(target=self.threadsFunction, args=("风机",))
             t.setDaemon(True)
             t.start()
 
@@ -483,7 +483,7 @@ class ControlForm(QtWidgets.QWidget, Ui_Form):
     def yellowButtonClicked(self):
 
         try:
-            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t = threading.Thread(target=self.threadsFunction, args=("黄灯",))
             t.setDaemon(True)
             t.start()
             # t.join() # 主进程卡在这等线程执行完毕
@@ -493,7 +493,7 @@ class ControlForm(QtWidgets.QWidget, Ui_Form):
     def redButtonClicked(self):
 
         try:
-            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t = threading.Thread(target=self.threadsFunction, args=("红灯",))
             t.setDaemon(True)
             t.start()
             # t.join() # 主进程卡在这等线程执行完毕
@@ -503,7 +503,7 @@ class ControlForm(QtWidgets.QWidget, Ui_Form):
     def greenButtonClicked(self):
 
         try:
-            t = threading.Thread(target=self.threadsFunction, args=("水泵",))
+            t = threading.Thread(target=self.threadsFunction, args=("绿灯",))
             t.setDaemon(True)
             t.start()
             # t.join() # 主进程卡在这等线程执行完毕
@@ -695,8 +695,8 @@ class MyMainForm(QMainWindow, Ui_MainWindow):
 
 if __name__ == "__main__":
 
-    # serverIP = "192.168.3.20"
-    serverIP = "localhost"
+    serverIP = "192.168.3.20"
+    # serverIP = "localhost"
     user = "root"
     # password = "123456" # 服务器数据库密码
     password = "123456"  # 本地电脑数据库密码
@@ -710,11 +710,11 @@ if __name__ == "__main__":
 
     #  用户注册
     regData = None
-    # try:
-    #     regData = userRegister(ip=serverIP)
-    #     print(regData)
-    # except Exception:
-    #     print("用户信息获取失败")
+    try:
+        regData = userRegister(ip=serverIP)
+        print(regData)
+    except Exception:
+        print("用户信息获取失败")
 
     # 固定的，PyQt5程序都需要QApplication对象。sys.argv是命令行参数列表，确保程序可以双击运行
     app = QApplication(sys.argv)

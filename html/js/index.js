@@ -86,6 +86,8 @@ function jsCallback(result) {
       axisTick: {
         show: false
       },
+      min:-2,
+      max:20,
       // 修饰刻度标签的颜色
       axisLabel: {
         color: "rgba(255,255,255,.7)"
@@ -327,6 +329,8 @@ function jsCallback(result) {
       axisTick: {
         show: false
       },
+      min: 60,
+      max:100,
       // 修饰刻度标签的颜色
       axisLabel: {
         color: "rgba(255,255,255,.7)"
