@@ -10,8 +10,8 @@ from django.shortcuts import render
 
 
 
-serverIP = "192.168.3.20"
-# serverIP = "localhost"
+# serverIP = "192.168.3.20"
+serverIP = "localhost"
 user = "root"
 # password = "123456" # 服务器数据库密码
 password = "123456"  # 本地电脑数据库密码
@@ -26,26 +26,24 @@ except Exception as e:
 
 def plotRealTime(windowsize = 50, step=1, id=1):
     tempID = op_mysql.last_record()
-    print(id+windowsize,"+",tempID)
-    if 1:
+    # print(id+windowsize,"+",tempID)
 
-        _, dataWindow, index = op_mysql.getData(
-            id=tempID-windowsize+1, window_size=windowsize, step=step)
-        ph4 = dataWindow[:, 0].tolist()
-        temperature = dataWindow[:, 1].tolist()
-        humility = dataWindow[:, 2].tolist()
-        o2 = dataWindow[:, 3].tolist()
-        t = []
-        for x in index:
-            t.append(x.strftime('%H:%M:%S'))
+    _, dataWindow, index = op_mysql.getData(
+        id=tempID-windowsize+1, window_size=windowsize, step=step)
+    ph4 = dataWindow[:, 0].tolist()
+    temperature = dataWindow[:, 1].tolist()
+    humility = dataWindow[:, 2].tolist()
+    o2 = dataWindow[:, 3].tolist()
+    t = []
+    for x in index:
+        t.append(x.strftime('%H:%M:%S'))
 
-        # print(index)
+    # print(index)
 
-        data = {'x': t, 'ph4': ph4, 'temperature': temperature, "humility": humility, 'o2': o2}
-        response = HttpResponse(json.dumps(data))
-        return response
-    else:
-        return HttpResponse("")
+    data = {'x': t, 'ph4': ph4, 'temperature': temperature, "humility": humility, 'o2': o2}
+    response = HttpResponse(json.dumps(data))
+    return response
+
 
 def getData(request):
     jsData = request.GET

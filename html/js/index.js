@@ -1,5 +1,5 @@
 
-var id = 370;
+var id = 371;
 var windowsize = 50;
 var plotType = "history"; //history,realtime,predict
 var plotSpeed = 1.; //秒
@@ -581,7 +581,7 @@ function realtimePlot() {
       success: function (result){
         speed = plotSpeed
         
-        id+=1,
+        // id+=1,
         jsCallback(result)
         // t = setTimeout(time, plotSpeed * 1000); //设定定时器，循环运行
       },
